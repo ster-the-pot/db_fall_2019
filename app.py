@@ -15,9 +15,6 @@ def aboutPage():
         return render_template("about.html")
 
 
-@app.route("/articles")
-def articlesPage():
-        return render_template("articles.html", articles = articles)
 
 if __name__ == "__main__":
     app.run()
