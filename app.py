@@ -1,10 +1,8 @@
 from flask import Flask, render_template
-from data import articles
 
 app = Flask(__name__)
 app.debug= True
 
-articles = articles()
 
 @app.route("/")
 def homePage():
