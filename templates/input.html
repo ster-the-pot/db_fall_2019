@@ -1,5 +1,39 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-Data Input 
+<div class="jumbotron">
+    <h1 class="display-4">Data Input Page</h1>
+    <p class="lead">Below you can choose from 4 different varieties of input. To begin, input the experimental
+        conditions that your experiments have been subjected to. After that, either input measurement's and values for
+        individual sequences manually, or upload your CSV file for serverside parsing. If you wish, you may also input
+        detailed information about a specific sequence.</p>
+    <hr class="my-4">
+
+</div>
+<div class="row">
+    <div class="card col-4" style="width: 18rem;">
+        <div class="card-body" style="text-align:center">
+            <h5 class="card-title">Insert New Conditions</h5>
+            <p class="card-text">Insert new conditions to Be applied to individual experiments. Consists of a condition
+                name, it's domain (type of recording) and it's value.
+                content.</p>
+            <button type="button" style="background-color:green" class="btn btn-success btn-lg btn-block">Large
+                button</button>
+
+        </div>
+    </div>
+    <div class="card col-4" style="width: 18rem;">
+        <div class="card-body" style="text-align:center">
+            <h5 class="card-title">Insert New Conditions</h5>
+            <p class="card-text">Insert new conditions to Be applied to individual experiments. Consists of a condition
+                name, it's domain (type of recording) and it's value.
+                content.</p>
+            <button type="button" style="background-color:green" class="btn btn-success btn-lg btn-block">Large
+                button</button>
+
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
