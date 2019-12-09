@@ -11,8 +11,12 @@ def homePage():
         return render_template('index.html')
 
 @app.route("/input")
-def aboutPage():
+def inputPage():
         return render_template("input.html")
+
+@app.route("/about")
+def aboutPage():
+        return render_template("about.html")
 
 class AddConditionForm(Form):
         conditions = StringField('Name', validators=[validators.Length(min=1,max=50)])
