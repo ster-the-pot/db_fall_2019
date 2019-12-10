@@ -11,18 +11,22 @@ app.debug= True
 def homePage():
         return render_template('index.html')
 
-@app.route("/input")
+@app.route("/input", methods=["GET","POST"])
 def inputPage():
-        form = forms.AddConditionForm(request.form)
-        if(request.method == 'POST' and form.validate()):
-                print(form.validate)
-                print(form.domain.data)
-                print(form.conditions.data)
-        return render_template(".html",form=form)
+        formCond = forms.AddConditionForm(request.form)
+        formMeasure = forms.AddMeasurementForm(request.form)
+
+        if(request.method == 'POST'):
+                if(request.form["btn"] == "condition" and formCond.validate()):
+                        print("Do Condition Insert")
+                elif(request.form["btn"] == "measure" and formMeasure.validate()):
+                        print("Do measure Insert")
+        
+        return render_template("input.html",formCond=formCond, formMeasure=formMeasure)
 
 @app.route("/about", methods =["GET","POST"])
 def aboutPage():
-        return render_template("about.html",form=form)
+        return render_template("about.html")
 
 if __name__ == "__main__":
     app.run()

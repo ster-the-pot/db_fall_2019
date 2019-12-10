@@ -1,12 +1,12 @@
 <div>
     {% from "includes/_formhelpers.html" import render_field %}
-    <form method="POST" action="" id="conditionForm">
+    <form method="POST" action="" id="measurementForm">
         <div class="form-group">
-            {{render_field(formCond.conditions,class_="form-control")}}
+            {{render_field(formMeasure.conditions,class_="form-control")}}
         </div>
         <p>Domain of Condition</p>
         <div class="well span6">
-                {{ formCond.domain (class_="radio-inline") }}
+                {{ formMeasure.domain (class_="radio-inline") }}
             </div>
     </form>
 </div>
