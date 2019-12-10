@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request,redirect,url_for,session, logging
+from flask import Flask, render_template,request,redirect,url_for,session, logging
 from wtforms import Form,StringField,TextAreaField,validators, SelectField
 import mysql.connector
+import forms
 
 app = Flask(__name__)
 app.debug= True
@@ -12,19 +13,16 @@ def homePage():
 
 @app.route("/input")
 def inputPage():
-        return render_template("input.html")
+        form = forms.AddConditionForm(request.form)
+        if(request.method == 'POST' and form.validate()):
+                print(form.validate)
+                print(form.domain.data)
+                print(form.conditions.data)
+        return render_template(".html",form=form)
 
-@app.route("/about")
+@app.route("/about", methods =["GET","POST"])
 def aboutPage():
-        return render_template("about.html")
-
-class AddConditionForm(Form):
-        conditions = StringField('Name', validators=[validators.Length(min=1,max=50)])
-        username = StringField('Username', validators=[validators.Length(min=4,max=25)])
-
-
-class SequenceSelectForm(Form):
-        sequences = SelectField(label="Select Sequence", choices = getSequences())
+        return render_template("about.html",form=form)
 
 if __name__ == "__main__":
     app.run()
