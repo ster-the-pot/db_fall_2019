@@ -11,6 +11,7 @@
 
 </div>
 <div class="row card-group" style="height:200px">
+    <!--Condition Card -->
     <div class="card col-4" style="width: 18rem;">
         <div class="card-body d-flex flex-column" style="text-align:center">
             <p class="card-text">Insert new conditions to be applied to individual experiments. Consists of a condition
@@ -21,6 +22,18 @@
 
         </div>
     </div>
+    <!--Measurement Card -->
+    <div class="card col-4" style="width: 18rem;">
+        <div class="card-body d-flex flex-column" style="text-align:center">
+            <p class="card-text">Insert new conditions to be applied to individual experiments. Consists of a condition
+                name, it's domain (type of recording) and it's value.
+                content.</p>
+            <button type="button" data-toggle="modal" data-target="#measurementModal" style="background-color:green" class=" mt-auto btn btn-success btn-lg btn-block">Input
+                Data</button>
+
+        </div>
+    </div>
+    <!--Sequence Card -->
     <div class="card col-4" style="width: 18rem;">
         <div class="card-body d-flex flex-column" style="text-align:center">
             <p class="card-text">Modify or insert detailed information about a sequence. Allows for information or
@@ -31,11 +44,11 @@
         </div>
     </div>
     <div class="card col-4" style="width: 18rem;">
+        <!--Measurement Card -->
         <div class="card-body d-flex flex-column" style="text-align:center">
-            <p class="card-text">Modify or insert detailed information about a sequence. Allows for information or
-                    clarification notes to be stored alongside a particular sequence</p>
+            <p class="card-text">For a specific sequence, insert measurement values. Once conditions and measurments in question have been input, they may be used here.</p>
             <button type="button" style="background-color:green" class=" mt-auto btn btn-success btn-lg btn-block">Insert
-                Measurement Values for a Sequence</button>
+                Measurement Values</button>
         </div>
     </div>
 
@@ -43,7 +56,7 @@
     
 </div>
 
-
+<!--Condition Modal -->
 <div class="modal fade" id="conditionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content" style="height:800px; width:800px">
