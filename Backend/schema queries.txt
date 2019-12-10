@@ -1,0 +1,70 @@
+cursor.execute("CREATE DATABASE IF NOT EXISTS biology")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Sequences "
+               "(Name varchar(255) PRIMARY KEY,"
+               "Description varchar(255),"
+               "File_Name varchar(255))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Condition_Domains "
+               "(Condition Varchar(255) PRIMARY KEY,"
+               "Domain Varchar(255))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Measurement_Domains"
+               "(Measurement_Name Varchar(255) PRIMARY KEY,"
+               "Domain Varchar(255))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Experiment_Int"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Sequence varchar(255),"
+               "Condition_Name varchar(255),"
+               "Condition_Value Int,"
+               "FOREIGN KEY (Sequence) REFERENCES Sequences(Name),"
+               "FOREIGN KEY (Condition_Name) REFERENCES Condition_Domains(Condition_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Experiment_Boolean"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Sequence varchar(255),"
+               "Condition_Name varchar(255),"
+               "Condition_Value Bool,"
+               "FOREIGN KEY (Sequence) REFERENCES Sequences(Name),"
+               "FOREIGN KEY (Condition_Name) REFERENCES Condition_Domains(Condition_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Experiment_String"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Sequence varchar(255),"
+               "Condition_Name varchar(255),"
+               "Condition_Value String,"
+               "FOREIGN KEY (Sequence) REFERENCES Sequences(Name),"
+               "FOREIGN KEY (Condition_Name) REFERENCES Condition_Domains(Condition_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Experiment_Float"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Sequence varchar(255),"
+               "Condition_Name varchar(255),"
+               "Condition_Value Double,"
+               "FOREIGN KEY (Sequence) REFERENCES Sequences(Name),"
+               "FOREIGN KEY (Condition_Name) REFERENCES Condition_Domains(Condition_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Measurements_Int"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Measurement_Name varchar(255),"
+               "Measurement_Value Int"
+               "FOREIGN KEY (Measurement_Name) REFERENCES Measurement_Domains(Measurement_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Measurements_Boolean"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Measurement_Name varchar(255),"
+               "Measurement_Value Bool,"
+               "FOREIGN KEY (Measurement_Name) REFERENCES Measurement_Domains(Measurement_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Measurements_String"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Measurement_Name varchar(255),"
+               "Measurement_Value varchar(255),"
+               "FOREIGN KEY (Measurement_Name) REFERENCES Measurement_Domains(Measurement_Name))")
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Measurements_Float"
+               "(Experiment_ID Int NOT NULL AUTO_INCREMENT,"
+               "Measurement_Name varchar(255),"
+               "Measurement_Value Double,"
+               "FOREIGN KEY (Measurement_Name) REFERENCES Measurement_Domains(Measurement_Name))")
