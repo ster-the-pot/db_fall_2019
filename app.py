@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request,redirect,url_for,session, logging
-from wtforms import Form,StringField,TextAreaField,validators
+from wtforms import Form,StringField,TextAreaField,validators, SelectField
 import mysql.connector
 
 app = Flask(__name__)
@@ -21,6 +21,10 @@ def aboutPage():
 class AddConditionForm(Form):
         conditions = StringField('Name', validators=[validators.Length(min=1,max=50)])
         username = StringField('Username', validators=[validators.Length(min=4,max=25)])
+
+
+class SequenceSelectForm(Form):
+        sequences = SelectField(label="Select Sequence", choices = getSequences())
 
 if __name__ == "__main__":
     app.run()
