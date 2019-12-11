@@ -1,13 +1,20 @@
+# file for all database queries/activities
 
-# file for all database queries/activities 
+def getAllSequences(cursor):
+    results = []
+    cursor.execute("SELECT Name FROM Sequences")
 
-def getAllSequences():
-    #need it to return an array of Seq identifier to seqName for SelectField in GUI
-    return ("SequenceIdentifier","SeqName"),("SequenceIdentifier2","SeqName2")
-
-def getAllConditions():
-    test = 1
-
-
+    sequences = cursor.fetchall()
+    for sequence in sequences:
+        results.append((str(sequence[0]), str(sequence[0])))
+    return results
 
 
+def getAllConditions(cursor):
+    results = []
+    cursor.execute("SELECT Name FROM Sequences")
+
+    conditions = cursor.fetchall()
+    for condition in conditions:
+        results.append((str(condition[0]), str(condition[0])))
+    return results
