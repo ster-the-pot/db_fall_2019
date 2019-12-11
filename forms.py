@@ -3,18 +3,24 @@ from wtforms import Form,StringField,TextAreaField,validators, SelectField, Radi
 import mysql.connector
 import queries
 
+# CUSTOM USER INPUT VALIDATORS
+def validateName(form, field):
+    if(len(field.data) == 0 ):
+        raise ValidationError("Name Already Exists")
+
+
 #USER INPUT FORMS
 class AddConditionForm(Form):
         conditions = StringField('Condition Name', [validators.Length(min=1,max=50), validateName])
         domain = RadioField("Domain",choices=[('int',"Integer"),('Boolean',"Boolean"),('String',"String"),("Float","Float")])
 
 class AddMeasurementForm(Form):
-        conditions = StringField('Measurement Name', [validators.Length(min=1,max=50), validateName])
+        measurement = StringField('Measurement Name', [validators.Length(min=1,max=50), validateName])
         domain = RadioField("Domain",choices=[('int',"Integer"),('Boolean',"Boolean"),('String',"String"),("Float","Float")])
 
 class ModifySequenceForm(Form):
-    sequence = SelectField("Sequence Name", choices=[queries.getAllSequences])
-    description = StringField("Description",[validators.Length(min=1,max=50), validators.required])
+    sequence = SelectField("Sequence Name")
+    description = StringField("Description",[validators.Length(min=1,max=50), validators.InputRequired()])
     filename = StringField("Sequence File", [validators.Length(min=1,max=50)])
 
 class InsertMeasurementForm(Form):
@@ -26,7 +32,3 @@ class SequenceSelectForm(Form):
 
 
 
-# CUSTOM USER INPUT VALIDATORS
-def validateName(form, field):
-    if(len(field.data) == 0 ):
-        raise ValidationError("Name Already Exists")
