@@ -2,11 +2,30 @@
     {% from "includes/_formhelpers.html" import render_field %}
     <form method="POST" action="" id="mValForm">
 
+        <p><b>Sequence</b></p>
         <select name="sequence" id="mValForm" placeholder="Select Sequence" class="form-control">
-            {% for subfield in formMVal.sequenceM %}
+            {% for subfield in formMVal.sequence %}
             <option class="dropdown-item">{{render_field(subfield.label)}}</option>
             {% endfor %}
         </select>
+
+        {%for i in range(0,formMVal.condList | length)%}
+            <div class="form-group">
+                {{formMVal.condList[i]}}
+            </div>
+        {%endfor%}
+
+
+        <p><b>Measurement Type</b></p>
+        <select name="measurement" id="mValForm" placeholder="Select Sequence" class="form-control">
+            {% for subfield in formMVal.measurement %}
+            <option class="dropdown-item">{{render_field(subfield.label)}}</option>
+            {% endfor %}
+        </select>
+
+        <div class="form-group">
+            {{render_field(formMVal.value,class_="form-control")}}
+        </div>
 
 
     </form>

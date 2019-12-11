@@ -9,6 +9,17 @@
         detailed information about a specific sequence.</p>
     <hr class="my-4">
 
+    {% if showMeasure %}
+    <script>
+            $(document).ready(function(){
+                $("#mValModal").modal('show');
+            });
+    </script>
+    <h1>WORKING</h1>
+
+{%endif%}
+
+
 </div>
 <div class="row card-group" style="height:200px">
     <!--Condition Card -->
@@ -146,6 +157,9 @@
     </div>
   </div>
 </div>
+
+
+
 
 
 {% endblock %}
