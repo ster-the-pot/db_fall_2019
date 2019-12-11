@@ -19,7 +19,7 @@ class AddMeasurementForm(Form):
         domain = RadioField("Domain",choices=[('int',"Integer"),('Boolean',"Boolean"),('String',"String"),("Float","Float")])
 
 class ModifySequenceForm(Form):
-    sequence = SelectField("Sequence Name")
+    sequence = SelectField("Sequence Name", default="Select Sequence Name")
     description = StringField("Description",[validators.Length(min=1,max=50), validators.InputRequired()])
     filename = StringField("Sequence File", [validators.Length(min=1,max=50)])
 

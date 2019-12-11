@@ -17,17 +17,19 @@ def inputPage():
         formCond = forms.AddConditionForm(request.form)
         formMeasure = forms.AddMeasurementForm(request.form)
         formSeq = forms.ModifySequenceForm(request.form)
-        formSeq.sequence.choices=queries.getAllSequences()
-        print(len(queries.getAllSequences()))
+        formSeq.sequence.choices=[("Test","Test")]
+        
 
         if(request.method == 'POST'):
-                print("Origin: " , request.form['btn'], "results: " , request.form, formSeq.sequence.data)
                 if(request.form["btn"] == "condition" and formCond.validate()):
                         print("Do Condition Insert")
                 elif(request.form["btn"] == "measure" and formMeasure.validate()):
                         print("Do measure Insert")
                 elif(request.form["btn"] == "sequence" and formSeq.validate()):
                         print("Do sequence modify")
+                elif(request.form["btn" == "mVal"] and formMVal.validate()):
+                        print("Do mval insert")
+                        
         
         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq)
 

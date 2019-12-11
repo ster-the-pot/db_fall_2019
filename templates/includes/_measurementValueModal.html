@@ -1,0 +1,13 @@
+<div>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="" id="mValForm">
+
+        <select name="sequenceM" id="mValForm" placeholder="Select Sequence" class="form-control">
+            {% for subfield in formMVal.sequenceM %}
+            <option class="dropdown-item">{{render_field(subfield.label)}}</option>
+            {% endfor %}
+        </select>
+
+
+    </form>
+</div>
