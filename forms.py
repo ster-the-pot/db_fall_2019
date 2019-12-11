@@ -29,8 +29,8 @@ class ModifySequenceForm(Form):
 
 #used for rendering a condition input with value for said condition
 class ConditionForm(Form):
-    condition = StringField('Condition Name', [validators.Length(min=1,max=50), validateName, validators.InputRequired()])
-    value= value  = StringField('Condition Value', [validators.Length(min=1,max=50), validateName])
+    condition = sequence = SelectField("Measurement", default="Select Measurement", choices=[("Cond2","Cond2"),("Cond1","Cond1")])
+    value= value  = StringField('', [validators.Length(min=1,max=50), validateName])
 
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
@@ -41,7 +41,14 @@ class InsertMeasurementForm(Form):
     condList = FieldList(FormField(ConditionForm))
 
     def addCondition(self):
-        condList.ad
+        self.condList.append_entry()
+        print(self.condList)
+        
+
+
+#handles addition of Conditions in Experiment Modal
+
+
 
 
     

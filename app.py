@@ -26,8 +26,11 @@ def inputPage():
 
         formMVal.addCondition()
         
+        
 
         if(request.method == 'POST'):
+
+
                 if(request.form["btn"] == "condition" and formCond.validate()):
                         print("Do Condition Insert")
                 elif(request.form["btn"] == "measure" and formMeasure.validate()):
@@ -36,6 +39,10 @@ def inputPage():
                         print("Do sequence modify")
                 elif(request.form["btn"] =="mVal" and formMVal.validate()):
                         print("Do mval insert")
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal)
+                elif(request.form["btn"] == "addCond"):
+                        formMVal.addCondition()
+                        print("added")
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true")
 
                         
