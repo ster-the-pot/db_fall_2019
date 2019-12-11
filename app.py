@@ -17,7 +17,11 @@ def inputPage():
         formCond = forms.AddConditionForm(request.form)
         formMeasure = forms.AddMeasurementForm(request.form)
         formSeq = forms.ModifySequenceForm(request.form)
-        formSeq.sequence.choices=[("Test","Test")]
+        formMVal = forms.InsertMeasurementForm(request.form)
+
+        seqList=queries.getAllSequences()
+        formSeq.sequence.choices=seqList
+        formMVal.sequence.choices=seqList
         
 
         if(request.method == 'POST'):
@@ -27,11 +31,11 @@ def inputPage():
                         print("Do measure Insert")
                 elif(request.form["btn"] == "sequence" and formSeq.validate()):
                         print("Do sequence modify")
-                elif(request.form["btn" == "mVal"] and formMVal.validate()):
+                elif(request.form["btn"] =="mVal" and formMVal.validate()):
                         print("Do mval insert")
                         
         
-        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq)
+        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal)
 
 @app.route("/about", methods =["GET","POST"])
 def aboutPage():

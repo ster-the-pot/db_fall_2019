@@ -24,7 +24,7 @@ class ModifySequenceForm(Form):
     filename = StringField("Sequence File", [validators.Length(min=1,max=50)])
 
 class InsertMeasurementForm(Form):
-    test = "test"
+    sequence = SelectField("Sequence Name", default="Select Sequence Name")
 
 
 class SequenceSelectForm(Form):

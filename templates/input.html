@@ -46,7 +46,7 @@
         <!--Measurement Card -->
         <div class="card-body d-flex flex-column" style="text-align:center">
             <p class="card-text">For a specific sequence, insert measurement values. Once conditions and measurments in question have been input, they may be used here.</p>
-            <button type="button" style="background-color:green" class=" mt-auto btn btn-success btn-lg btn-block">Insert
+            <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green" class=" mt-auto btn btn-success btn-lg btn-block">Insert
                 Measurement Values</button>
         </div>
     </div>
@@ -118,6 +118,30 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button form="sequenceForm" type="submit" name="btn" value="sequence" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--Mval insert Modal -->
+<div class="modal fade" id="mValModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modify Sequence</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% include 'includes/_measurementValueModal.html'%}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
