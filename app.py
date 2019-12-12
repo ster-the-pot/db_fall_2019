@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,redirect,url_for,session, logging
+from flask import Flask, render_template,request,redirect,url_for,session, logging, flash
 from wtforms import Form,StringField,TextAreaField,validators, SelectField
 import mysql.connector
 import forms
@@ -6,6 +6,7 @@ import queries
 
 app = Flask(__name__)
 app.debug= True
+app.secret_key="bryceSterlingCool"
 
 
 @app.route("/")
@@ -58,7 +59,10 @@ def inputPage():
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true",formFile=formFile)
                 elif(request.form["btn"] == "fileUpload" and formFile.validate()):
                         print("file upload")
-                        forms.validateFile(request.files["file"])
+                        if(forms.validateFile(request.files["file"])):
+                                flash("File Uploaded Successfully","success")
+                        else:
+                                flash("File Failed to Upload. Invalid File Type!","failed")
 
                         
         
