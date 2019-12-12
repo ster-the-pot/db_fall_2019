@@ -90,8 +90,7 @@ class QueryMeasurementForm(Form):
 
     def addCondition(self):
         self.condList.append_entry()
-        print(self.condList)
-
+        
     def getConditions(self):
         conditionList = []
         while(len(self.condList) is not 0):

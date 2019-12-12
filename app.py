@@ -20,14 +20,15 @@ def experimentPage():
         if(request.method=="POST"):
                 if(request.form["btn"] == "mVal" and formMVal.validate()):
                         print("Do Experiment Lookup")
-
-                elif(request.form["btn"] == "addCond"):
-                        print("add conditions")
-                        formMVal.addCondition()
                         #results of query
                         conditionList = formMVal.getConditions()
                         sequence = formMVal.sequence.data
                         #################################
+
+                elif(request.form["btn"] == "addCond"):
+                        print("add conditions")
+                        formMVal.addCondition()
+                        
                         return render_template('experiment.html',formMVal=formMVal, showMeasure="true")                
 
         return render_template('experiment.html',formMVal=formMVal)
