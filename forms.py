@@ -22,7 +22,7 @@ class AddMeasurementForm(Form):
         domain = RadioField("Domain",choices=[('String',"String"),('Boolean',"Boolean"),('int',"Integer"),("Float","Float")],default="String")
 
 class ModifySequenceForm(Form):
-    sequence = SelectField("Sequence Name", default="Select Sequence Name")
+    sequence = SelectField("Sequence Name", default="Select Sequence Name",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
     description = StringField("Description",[validators.Length(min=1,max=50), validators.InputRequired()])
     filename = StringField("Sequence File", [validators.Length(min=1,max=50)])
 
@@ -37,8 +37,8 @@ class ConditionForm(Form):
 
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
-    sequence = SelectField(label="Select Sequence")
-    measurement = sequence = SelectField("Measurement", default="Select Measurement", choices=[("Me1","Me1"),("Me2","Me2")])
+    sequence = SelectField(label="Select Sequence",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
+    measurement = SelectField("Measurement", default="Select Measurement", choices=[("Me1","Me1"),("Me2","Me2")])
     value  = StringField('Measurement Value', [validators.Length(min=1,max=50), validateName])
 
     condList = FieldList(FormField(ConditionForm))
@@ -62,10 +62,17 @@ def validateFile(file):
     print(file.filename)
     if(file.filename == ""):
         return False
-    filename = secure_filename(file.filename)
-    file.save()
-    print(filename)
-    return True
+    filename = file.filename
+
+    if(filename.rsplit('.',1)[1].lower() == "csv"):
+        filename = secure_filename(filename)
+        print(filename)
+        # call file save function
+        return True
+    else:
+        return False
+    
+    
 
 #validation functions
 class CSVFileUpload(Form):

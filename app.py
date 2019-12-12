@@ -13,6 +13,11 @@ app.secret_key="bryceSterlingCool"
 def homePage():
         return render_template('index.html')
 
+@app.route("/query/experiment", methods=["GET","POST"])
+def experimentPage():
+        formMVal = forms.InsertMeasurementForm(request.form)
+        return render_template('experiment.html',formMVal=formMVal)
+
 @app.route("/input", methods=["GET","POST"])
 def inputPage():
         formCond = forms.AddConditionForm(request.form)
@@ -21,10 +26,8 @@ def inputPage():
         formMVal = forms.InsertMeasurementForm(request.form)
         formFile = forms.CSVFileUpload(request.form)
 
-        seqList = [("Seq1","Seq1"),("Seq2","Seq2")]
+        
         #seqList=queries.getAllSequences()
-        formSeq.sequence.choices=seqList
-        formMVal.sequence.choices=seqList
 
         if(request.method == 'POST'):
 
