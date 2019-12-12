@@ -31,7 +31,6 @@ def experimentPage():
                         formMVal.addCondition()
                         
                         return render_template('experiment.html',formMVal=formMVal, showMeasure="true")                
-
         return render_template('experiment.html',formMVal=formMVal)
 
 @app.route("/query/side", methods=["GET","POST"])
