@@ -34,6 +34,31 @@ def experimentPage():
 
         return render_template('experiment.html',formMVal=formMVal)
 
+@app.route("/query/side", methods=["GET","POST"])
+def sideBySidePage():
+        formMVal = forms.QueryMeasurementForm(request.form)
+        formMVal1 = forms.QueryMeasurementForm(request.form)
+        
+        if(request.method=="POST"):
+                if(request.form["btn"] == "mVal" and formMVal.validate()):
+                        print("Do Experiment Lookup")
+                        #results of query
+                        conditionList = formMVal.getConditions()
+                        sequence = formMVal.sequence.data
+                        #################################
+                        measurements = [("Measurement1","MeasurementValue1"),("Measurement2","MeasurementValue2"),("Measurement3","MeasurementValue3")]
+                        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1, measurements=measurements) 
+                elif(request.form["btn"] == "addCond"):
+                        print("add conditions")
+                        formMVal.addCondition()
+                        
+                        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1, showMeasure="true")
+         
+
+        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1)
+
+
+
 @app.route("/input", methods=["GET","POST"])
 def inputPage():
         formCond = forms.AddConditionForm(request.form)

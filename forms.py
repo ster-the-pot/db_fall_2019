@@ -90,10 +90,13 @@ class QueryMeasurementForm(Form):
 
     def addCondition(self):
         self.condList.append_entry()
-        
+
     def getConditions(self):
         conditionList = []
         while(len(self.condList) is not 0):
             conditionList.append(self.condList.pop_entry().data)
             #conditionList.append({"condition":rawCond.})
         return conditionList
+
+
+

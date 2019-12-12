@@ -2,22 +2,34 @@
 
 {% block body %}
 <div class="jumbotron" style="margin-bottom: 0px;">
-    <h1 class="display-4">Query and Analysis: Experiment Info</h1>
-    <p class="lead">This page is designed to allow for query and analysis of input experiment information. Given an
-        experiment (sequence and set of conditions/values for said conditions), the database will return all
-        measurements associated with the experiment for analysis</p>
+    <h1 class="display-4">Query and Analysis: Side-By-Side Comparison</h1>
+    <p class="lead">This page is designed to allow for query and analysis of two experiments. Given the
+        experiments (sequence and set of conditions/values for each), the database will return all
+        measurements that the two experiments have in common</p>
 </div>
 
 {% if showMeasure %}
 <script>
     $(document).ready(function () {
-        $("#mValModal").modal('show');
+        $("#mValModal1").modal('show');
     });
 </script>
 {%endif%}
 
+
+
 <div class="row card-group">
-    <div class="card col 4" style="width: 18rem;">
+    <div class="card col-6">
+        <button type="button" data-toggle="modal" data-target="#mValModal1" style="background-color:green"
+            class=" row my-auto btn btn-success btn-lg">Set Experiment 1</button>
+    </div>
+
+    <button type="button" data-toggle="modal" data-target="#mValModal1" style="background-color:green"
+        class=" col-6 my-auto btn btn-success btn-lg">Set Experiment 2</button>
+
+</div>
+<div class="row card-group">
+    <div class="card col 6" style="width: 18rem;">
         <div class="card-body ">
             <h5 class="card-title">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
@@ -27,13 +39,7 @@
             <a href="#" class="card-link">Another link</a>
         </div>
     </div>
-
-    <div class="card">
-        <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green"
-            class=" my-auto btn btn-success btn-lg">Query Experiment Measurements</button>
-    </div>
-
-    <div class="card col 4" style="width: 18rem;">
+    <div class="card col 6" style="width: 18rem;">
         <div class="card-body ">
             <h5 class="card-title">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
@@ -45,35 +51,37 @@
     </div>
 </div>
 
+
+
 {%if measurements%}
 <table class="table">
     <thead class="thead-dark">
-        
+
         <tr>
             <th scope="col"> #</th>
-            <th scope="col">Measurement</th>
-            <th scope="col">Value of Measurement</th>
+            <th style="text-align:center" scope="col">Measurement</th>
+            <th style="text-align:center" scope="col">Value of Measurement</th>
         </tr>
     </thead>
     <tbody>
-            {%for tuple in measurements%}
-            <tr>
-                <th scope="row"> {{loop.index}}</th>
-                <td>{{tuple[0]}}</td> 
-                <td>{{tuple[1]}}</td>
-            </tr>
-            {%endfor%}
+        {%for tuple in measurements%}
+        <tr>
+            <th scope="row"> {{loop.index}}</th>
+            <td style="text-align:center">{{tuple[0]}}</td>
+            <td style="text-align:center">{{tuple[1]}}</td>
+        </tr>
+        {%endfor%}
     </tbody>
 </table>
 {%endif%}
 
 <!--Mval insert Modal -->
-<div class="modal fade" id="mValModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="mValModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Query an Experiment's Measurements</h5>
+                <h5 class="modal-title" id="exampleModalLabel"> Set Experiment</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -87,7 +95,8 @@
                         style="background-color:green">Add Condition</button>
                 </form>
                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Query Experiment</button>
+                <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Query
+                    Experiment</button>
             </div>
         </div>
     </div>
