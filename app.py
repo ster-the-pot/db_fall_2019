@@ -24,7 +24,8 @@ def experimentPage():
                         conditionList = formMVal.getConditions()
                         sequence = formMVal.sequence.data
                         #################################
-
+                        measurements = [("Measurement1","MeasurementValue1"),("Measurement2","MeasurementValue2"),("Measurement3","MeasurementValue3")]
+                        return render_template('experiment.html',formMVal=formMVal, measurements=measurements) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition()

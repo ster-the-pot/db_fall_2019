@@ -9,12 +9,12 @@
 </div>
 
 {% if showMeasure %}
-    <script>
-        $(document).ready(function () {
-            $("#mValModal").modal('show');
-        });
-    </script>
-    {%endif%}
+<script>
+    $(document).ready(function () {
+        $("#mValModal").modal('show');
+    });
+</script>
+{%endif%}
 
 <div class="row card-group">
     <div class="card col 4" style="width: 18rem;">
@@ -44,37 +44,60 @@
             <a href="#" class="card-link">Another link</a>
         </div>
     </div>
+</div>
 
-    <!--Mval insert Modal -->
-    <div class="modal fade" id="mValModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Query an Experiment's Measurements</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {% include 'includes/_measurementValueModal.html'%}
-                </div>
-                <div class="modal-footer">
-                    <form method="POST" id="addCondForm">
-                        <button type="submit" form="mValForm" name="btn" value="addCond" class="btn btn-secondary"
-                            style="background-color:green">Add Condition</button>
-                    </form>
-                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Save
-                        changes</button>
-                </div>
+{%if measurements%}
+<table class="table">
+    <thead class="thead-dark">
+        
+        <tr>
+            <th scope="col"> #</th>
+            <th scope="col">Measurement</th>
+            <th scope="col">Value of Measurement</th>
+        </tr>
+    </thead>
+    <tbody>
+            {%for tuple in measurements%}
+            <tr>
+                <th scope="row"> {{loop.index}}</th>
+                <td>{{tuple[0]}}</td> 
+                <td>{{tuple[1]}}</td>
+            </tr>
+            {%endfor%}
+    </tbody>
+</table>
+{%endif%}
+
+<!--Mval insert Modal -->
+<div class="modal fade" id="mValModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Query an Experiment's Measurements</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'includes/_measurementValueModal.html'%}
+            </div>
+            <div class="modal-footer">
+                <form method="POST" id="addCondForm">
+                    <button type="submit" form="mValForm" name="btn" value="addCond" class="btn btn-secondary"
+                        style="background-color:green">Add Condition</button>
+                </form>
+                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Save
+                    changes</button>
             </div>
         </div>
     </div>
-
-    
-
+</div>
 
 
 
-    {% endblock %}
+
+
+
+{% endblock %}
