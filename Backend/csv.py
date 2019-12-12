@@ -72,7 +72,7 @@ def csvInput(csv, cursor):
                     mydb.commit()
                     prevInsert = True
                 else:
-                    cursor.execute("SELECT Experiment_ID"
+                    cursor.execute("SELECT DISTINCT Experiment_ID"
                                    "FROM Experiment_" + str(domain) +
                                    " WHERE Sequence = " + str(experiment[0])
                                    + " AND Condition_Name = " + str(initCond)

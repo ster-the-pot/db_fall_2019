@@ -1,14 +1,14 @@
 class ExperimentReturn:
     iD = -1
     sequence = ""
-    conditions = []
-    measurements = []
+    conditions = {}
+    measurements = {}
 
 
 class Experiment:
     sequence = ""
-    conditions = []
-    measurements = []
+    conditions = {}
+    measurements = {}
 
 
 def experimentConstruct(sequence, conditions, measurements):

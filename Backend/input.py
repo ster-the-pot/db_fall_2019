@@ -26,7 +26,7 @@ def experimentAdd(experiment, cursor):
     for condition in experiment.conditions:
         cursor.execute("SELECT Domain FROM Condition_Domains WHERE Condition_Name = " + condition)
         domain = cursor.fetchall()
-        if domain is None:
+        if domain is False:
             continue
         prevInsert = False
         initCond = 0
@@ -46,7 +46,7 @@ def experimentAdd(experiment, cursor):
                                " AND condition ")
                 expIDs = cursor.fetchall()
 
-                if expIDs is None:
+                if expIDs is False:
                     continue
 
                 for i in expIDs:
@@ -57,7 +57,7 @@ def experimentAdd(experiment, cursor):
     for measurement in experiment.measurements:
         cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name =" + str(measurement))
         domain = cursor.fetchall
-        if domain is None:
+        if domain is False:
             continue
         for d in domain:
             cursor.execute("INSERT INTO Measurement_" + str(d[0]) + " Values (" +
@@ -69,8 +69,8 @@ def experimentInfo(condition, value, cursor):
     cursor.execute("SELECT Domain "
                    "FROM Condition_Domains "
                    "WHERE Condition_Name = " + str(condition))
-    domain = cursor.fetchone()
-    if domain is None:
+    domain = cursor.fetchall()
+    if domain is False:
         return
     cursor.execute("SELECT Experiment_ID "
                    "FROM Experiment_" + str(domain[0]) +
@@ -79,12 +79,20 @@ def experimentInfo(condition, value, cursor):
 
     expIDs = cursor.fetchall()
 
-    if expIDs is None:
+    if expIDs is False:
         return
     for iD in expIDs:
         ex = ExperimentReturn()
         ex.id = iD
         ex.conditions[str(condition)] = value
+
+        cursor.execute("SELECT Sequence FROM Experiment_" + str(domain[0]) +
+                       " WHERE Experiment_ID = " + str(iD))
+
+        sequence = cursor.fetchone()
+
+        ex.sequence = sequence[0]
+
         cursor.execute("SELECT * FROM Measurement_Int WHERE Experiment_ID = " + str(iD))
 
         exps = cursor.fetchall()
@@ -114,37 +122,44 @@ def experimentInfo(condition, value, cursor):
     return answer
 
 
-def cotainsSequence(sequence, cursor):
-    ids = []
+def containsSequence(sequence, cursor):
+    exps = []
 
-    cursor.execute("(SELECT Experiment_ID FROM Experiment_Int WHERE Sequence = " + str(sequence) +
+    cursor.execute("(SELECT DISTINCT Experiment_ID FROM Experiment_Int WHERE Sequence = " + str(sequence) +
                    ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_Float WHERE Sequence = " + str(sequence) +
+                   "(SELECT DISTINCT Experiment_ID FROM Experiment_Float WHERE Sequence = " + str(sequence) +
                    ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_Boolean WHERE Sequence = " + str(sequence) +
+                   "(SELECT DISTINCT Experiment_ID FROM Experiment_Boolean WHERE Sequence = " + str(sequence) +
                    ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_String WHERE Sequence = " + str(sequence) + ')')
+                   "(SELECT DISTINCT Experiment_ID FROM Experiment_String WHERE Sequence = " + str(sequence) + ')')
 
     iDs = cursor.fetchall()
 
     for iD in iDs:
-        ids.append(iD[0])
-    return ids
+        exp = ExperimentReturn()
+        exp.iD = iD[0]
+        exp.sequence = sequence
+        cursor.execute("(SELECT Condition_Name, Condition_Value FROM Experiment_Int WHERE Experiment_ID = " + str(iD) +
+                       ") UNION "
+                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Float WHERE Experiment_ID = " + str(iD) +
+                       ") UNION "
+                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Boolean WHERE Experiment_ID = " + str(iD) +
+                       ") UNION "
+                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Int WHERE Experiment_ID = " + str(iD) + ')')
+
+        results = cursor.fetchall()
+        for result in results:
+            exp.conditions[result[0]] = result[1]
+        if exp not in exps:
+            exps.append(exp)
+    return exps
 
 
-def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
-    cursor.execute("(SELECT Experiment_ID FROM Experiment_Int WHERE Sequence = " + str(sequence1) +
-                   ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_Float WHERE Sequence = " + str(sequence1) +
-                   ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_Boolean WHERE Sequence = " + str(sequence1) +
-                   ") UNION "
-                   "(SELECT Experiment_ID FROM Experiment_String WHERE Sequence = " + str(sequence1) + ')')
-    ids = cursor.fetchall()
+def containsConditions(iDs, conditions, cursor):
+    ids = []
 
-    valid = []
-    for iD in ids:
-        for condition in conditions1:
+    for iD in iDs:
+        for condition in conditions:
             cursor.execute("(SELECT Experiment_ID FROM Experiment_Int WHERE Condition_Name = " + str(condition) +
                            " AND Experiment_ID = " + str(iD) + ") UNION "
                            "(SELECT Experiment_ID FROM Experiment_String WHERE Condition_Name = " + str(condition) +
@@ -153,13 +168,55 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                            " AND Experiment_ID = " + str(iD) + ") UNION "
                            "(SELECT Experiment_ID FROM Experiment_Boolean WHERE Condition_Name = " + str(condition) +
                            " AND Experiment_ID = " + str(iD) + ')')
-            val = cursor.fetchall()
 
-            if val is None:
-                continue
-            for v in val:
-                if v not in valid:
-                    valid.append(v)
+
+def side_by_side(exp1, exp2, cursor):
+    shared = {}
+    cursor.execute("(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = "
+                   + str(exp1.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = "
+                   + str(exp1.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = "
+                   + str(exp1.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = "
+                   + str(exp1.iD) + ')')
+
+    results1 = cursor.fetchall()
+
+    for result in results1:
+        exp1.measurements[result[0]] = result[1]
+
+    cursor.execute("(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = "
+                   + str(exp2.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = "
+                   + str(exp2.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = "
+                   + str(exp2.iD) +
+                   ") UNION "
+                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = "
+                   + str(exp2.iD) + ')')
+
+    results2 = cursor.fetchall()
+
+    for result in results2:
+        exp2.measurements[result[0]] = result[1]
+
+    for result in exp1.measurements:
+        if result in exp2.measurements:
+            if result not in shared:
+                shared[result] = exp1.measurements[result]
+    for result in exp2.measurements:
+        if result in exp1.measurements:
+            if result not in shared:
+                shared[result] = exp2.measurements[result]
+
+    return shared
+
 
 def multipleExp(sequences, conditions, measurements, cursor):
     answer = []
@@ -188,7 +245,7 @@ def multipleExp(sequences, conditions, measurements, cursor):
 
                 exps = cursor.fetchall
 
-                if exps is None:
+                if exps is False:
                     continue
 
                 for exp in exps:
