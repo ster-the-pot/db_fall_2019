@@ -18,18 +18,18 @@ def inputPage():
         formMeasure = forms.AddMeasurementForm(request.form)
         formSeq = forms.ModifySequenceForm(request.form)
         formMVal = forms.InsertMeasurementForm(request.form)
+        formFile = forms.CSVFileUpload(request.form)
 
         seqList = [("Seq1","Seq1"),("Seq2","Seq2")]
         #seqList=queries.getAllSequences()
         formSeq.sequence.choices=seqList
         formMVal.sequence.choices=seqList
 
-        formMVal.addCondition()
-        
-        
-
         if(request.method == 'POST'):
 
+                #print(request.form)
+                #print(formMVal.validate())
+        
 
                 if(request.form["btn"] == "condition" and formCond.validate()):
                         print("Do Condition Insert")
@@ -39,15 +39,30 @@ def inputPage():
                         print("Do sequence modify")
                 elif(request.form["btn"] =="mVal" and formMVal.validate()):
                         print("Do mval insert")
-                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal)
+                        #resultSet of form submission
+                        sequence = formMVal.sequence.data
+                        measurement = formMVal.measurement.data
+                        mVal = formMVal.value.data
+                        print(sequence)
+                        print(measurement)
+                        print(mVal)
+                        conditionList = formMVal.getConditions()
+                        print(conditionList)
+                        
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
+                        
+                        #insertion into database
+
                 elif(request.form["btn"] == "addCond"):
                         formMVal.addCondition()
-                        print("added")
-                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true")
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true",formFile=formFile)
+                elif(request.form["btn"] == "fileUpload" and formFile.validate()):
+                        print("file upload")
+                        forms.validateFile(request.files["file"])
 
                         
         
-        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal)
+        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal,formFile=formFile)
 
 @app.route("/about", methods =["GET","POST"])
 def aboutPage():

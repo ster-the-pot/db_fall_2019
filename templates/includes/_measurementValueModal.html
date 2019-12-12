@@ -1,7 +1,7 @@
 <div>
     {% from "includes/_formhelpers.html" import render_field %}
     <form method="POST" action="" id="mValForm">
-        <div class="row">
+        <div class="" style="margin-bottom:10px">
         <p><b>Sequence</b></p>
         <select name="sequence" id="mValForm" placeholder="Select Sequence" class="form-control">
             {% for subfield in formMVal.sequence %}
@@ -10,16 +10,16 @@
         </select>
         </div>
         
-        {%for i in formMVal.condList %}
-        <div class="row" style="text-align:center">
+        {%for i in formMVal.condList%}
+        <div class="row no gutters" style="margin-bottom: 0px;">
             <div class="col-6"><p><b>Condition {{loop.index}}</b></p> </div>
             <div class="col-6"><p><b>Value {{loop.index}}</b></p> </div>
         </div>
-        <div class="form-group row" style="text-align:center" >
-            <select name="{{condition}}" id="sequenceForm" placeholder="Select Sequence" class="form-control col-6">
+        <div class="form-group row" style="text-align:center; margin: 0px 5px 0px 5px" >
+            <select name="{{i.form.condition.name}}" id="sequenceForm" placeholder="Select Sequence" class="form-control col-6">
 
                 {% for subfield in i.condition %}
-                <option class="dropdown-item">{{render_field(subfield.label)}}</option>
+                <option name="{{subfield}}"class="dropdown-item">{{render_field(subfield.label)}}</option>
                 {% endfor %}
 
             </select>

@@ -68,8 +68,10 @@
         </div>
     </div>
 
-    <button type="button" style="background-color:green" class="row btn btn-primary btn-lg btn-block col-12">Input CSV
-        File</button>
+
+        
+    <button type="button" data-toggle="modal" data-target="#uploadModal" style="background-color:green"
+    class=" mt-auto btn btn-success btn-lg btn-block">Upload CSV Data</button>
 
 </div>
 
@@ -167,6 +169,30 @@
                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Save
                     changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--File Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload CSV File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'includes/_fileUploadModal.html'%}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button form="fileUpload" type="submit" name="btn" value="fileUpload" class="btn btn-primary">Upload File</button>
             </div>
         </div>
     </div>
