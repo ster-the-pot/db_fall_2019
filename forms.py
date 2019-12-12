@@ -81,4 +81,20 @@ class CSVFileUpload(Form):
 
 
 
-#handles addition of Conditions in Experiment Modal
+
+
+class QueryMeasurementForm(Form):
+    sequence = SelectField(label="Select Sequence",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
+    
+    condList = FieldList(FormField(ConditionForm))
+
+    def addCondition(self):
+        self.condList.append_entry()
+        print(self.condList)
+
+    def getConditions(self):
+        conditionList = []
+        while(len(self.condList) is not 0):
+            conditionList.append(self.condList.pop_entry().data)
+            #conditionList.append({"condition":rawCond.})
+        return conditionList

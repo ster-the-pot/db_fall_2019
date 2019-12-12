@@ -29,7 +29,7 @@
         
         {%endfor%}
 
-
+        {%if formMVal.measurement and formMVal.value%}
         <p><b>Measurement Type</b></p>
         <select name="measurement" id="mValForm" placeholder="Select Sequence" class="form-control">
             {% for subfield in formMVal.measurement %}
@@ -40,7 +40,7 @@
         <div class="form-group">
             {{render_field(formMVal.value,class_="form-control")}}
         </div>
-
+        {%endif%}
 
     </form>
 </div>

@@ -8,6 +8,14 @@
         measurements associated with the experiment for analysis</p>
 </div>
 
+{% if showMeasure %}
+    <script>
+        $(document).ready(function () {
+            $("#mValModal").modal('show');
+        });
+    </script>
+    {%endif%}
+
 <div class="row card-group">
     <div class="card col 4" style="width: 18rem;">
         <div class="card-body ">
@@ -43,7 +51,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Insert Experiment Measurement</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Query an Experiment's Measurements</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -63,6 +71,8 @@
             </div>
         </div>
     </div>
+
+    
 
 
 

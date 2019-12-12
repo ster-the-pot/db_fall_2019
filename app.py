@@ -15,7 +15,21 @@ def homePage():
 
 @app.route("/query/experiment", methods=["GET","POST"])
 def experimentPage():
-        formMVal = forms.InsertMeasurementForm(request.form)
+        formMVal = forms.QueryMeasurementForm(request.form)
+        
+        if(request.method=="POST"):
+                if(request.form["btn"] == "mVal" and formMVal.validate()):
+                        print("Do Experiment Lookup")
+
+                elif(request.form["btn"] == "addCond"):
+                        print("add conditions")
+                        formMVal.addCondition()
+                        #results of query
+                        conditionList = formMVal.getConditions()
+                        sequence = formMVal.sequence.data
+                        #################################
+                        return render_template('experiment.html',formMVal=formMVal, showMeasure="true")                
+
         return render_template('experiment.html',formMVal=formMVal)
 
 @app.route("/input", methods=["GET","POST"])
