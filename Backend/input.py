@@ -53,7 +53,7 @@ def sequenceAdd(name, description, cursor, file_name=None):
 
 
 def experimentAdd(sequence, conditions, measurement, value, cursor):
-    experiment = Experiment()
+    experiment = ExperimentReturn()
     experiment.sequence = sequence
     experiment.measurements[measurement] = value
     for condition in conditions:
@@ -92,6 +92,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                         iD = i[0]
 
                     prevInsert = True
+                    experiment.iD = iD
                     initCond = condition
                     initValue = experiment.conditions[condition]
 
@@ -101,15 +102,8 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
 
             else:
                 try:
-                    cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
-                                    WHERE Experiment_ID = %s
-                                    AND Sequence = %s
-                                    AND Condition_Name = %s
-                                    AND Condition_Value = %s""", (iD, experiment.sequence, initCont, initValue))
-                    insertID = cursor.fetchone()
-
                     cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
-                                   (insertID[0], experiment.sequence, condition, experiment.conditions[condition]))
+                                   (experiment.iD, experiment.sequence, condition, experiment.conditions[condition]))
                 except (errors.Error, errors.Warning) as error:
                     print(error)
                     return False
