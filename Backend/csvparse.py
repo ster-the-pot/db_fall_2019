@@ -16,7 +16,7 @@ def csvInput(csv, cursor):
         try:
             cursor.execute("""INSERT INTO Sequences Values(%s, %s, %s) ON DUPLICATE KEY UPDATE Sequence = %s""",
                            (experiment[0], None, None, name))
-        except (errors.Error, errors.Warning):
+        except (mysql.Error, mysql.Warning) as error:
             print(error)
 
         conditions = experiment[1].split('_')
@@ -76,7 +76,7 @@ def csvInput(csv, cursor):
                     try:
                         cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
                                        (experiment[0], c[0], value))
-                    except (mysql.errors.Error, mysql.errors.Warning) as error:
+                    except (mysql.Error, mysql.Warning) as error:
                         print(error)
         if iD == -1:
             continue
@@ -112,6 +112,6 @@ def csvInput(csv, cursor):
                 try:
                     cursor.execute("""INSERT INTO Measurements_""" + rDomain +
                                    """ VALUES (%s, %s, %s)""", (iD, r[0], rValue))
-                except (mysql.errors.Error, mysql.errors.Warning) as error:
+                except (mysql.Error, mysql.Warning) as error:
                     print(error)
     return True
