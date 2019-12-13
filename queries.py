@@ -12,7 +12,7 @@ cursor = mydb.cursor()
 
 def getAllSequences(cursor):
     results = []
-    cursor.execute("SELECT Name FROM Sequences")
+    cursor.execute("SELECT Sequence FROM Sequences")
 
     sequences = cursor.fetchall()
     for sequence in sequences:
