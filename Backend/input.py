@@ -44,8 +44,9 @@ def measurementAdd(name, domain, cursor):
 
 def sequenceAdd(name, description, cursor, file_name=None):
     try:
-        cursor.execute("""INSERT INTO Sequences Values(%s, %s, %s) ON DUPLICATE KEY UPDATE Sequence = %s""",
-                       (name, description, file_name, name))
+        cursor.execute("""INSERT INTO Sequences Values(%s, %s, %s) ON DUPLICATE KEY UPDATE Sequence = %s
+                        AND Description = %s AND File_Name = %s""",
+                       (name, description, file_name, name, description, file_name))
     except (errors.Error, errors.Warning):
         return False
     return True
