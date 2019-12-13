@@ -10,16 +10,12 @@ def getAllSequences(cursor):
     return results
 
 
-def getAllConditions(sequence, cursor):
-    results = []
-    cursor.execute("(SELECT Condition_Name, Condition_Value FROM Experiment_Int WHERE Sequence = " + str(sequence) +
-                   ") UNION "
-                   "(SELECT Condition_Name, Condition_Value FROM Experiment_Float WHERE Sequence = " + str(sequence) +
-                   ") UNION "
-                   "(SELECT Condition_Name, Condition_Value FROM Experiment_Boolean WHERE Sequence = " + str(sequence) +
-                   ") UNION "
-                   "(SELECT Condition_Name, Condition_Value FROM Experiment_Boolean WHERE Sequence = " + str(sequence)
-                   + ')')
+def getAllConditions(cursor):
+    results = {}
+    cursor.execute("""(SELECT Condition_Name, Condition_Value FROM Experiment_Int) UNION 
+                   (SELECT Condition_Name, Condition_Value FROM Experiment_Float) UNION 
+                   (SELECT Condition_Name, Condition_Value FROM Experiment_Boolean) UNION 
+                   (SELECT Condition_Name, Condition_Value FROM Experiment_Boolean)""")
 
     conditions = cursor.fetchall()
     for condition in conditions:
