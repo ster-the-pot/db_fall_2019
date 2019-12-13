@@ -15,7 +15,7 @@ def csvInput(csv, cursor):
 
         try:
             cursor.execute("""INSERT INTO Sequences Values(%s, %s, %s) ON DUPLICATE KEY UPDATE Sequence = %s""",
-                           (experiment[0], None, None, name))
+                           (experiment[0], None, None, experiment[0]))
         except (mysql.Error, mysql.Warning) as error:
             print(error)
 
@@ -57,15 +57,15 @@ def csvInput(csv, cursor):
                     continue
                 if not prevInsert:
                     cursor.execute("""INSERT INTO Experiment_""" + domain +
-                                   """(Sequence, Condition_Name, Condition_Value) VALUES %s"
-                                   "(%s, %s, %s)""", (experiment[0], c[0], value))
+                                   """ (Sequence, Condition_Name, Condition_Value) VALUES 
+                                   (%s, %s, %s)""", (experiment[0], c[0], value))
                     initCond = c[0]
                     initValue = value
                     prevInsert = True
                 else:
                     cursor.execute("""SELECT DISTINCT Experiment_ID"
                                    FROM Experiment_""" + domain +
-                                   """WHERE Sequence = %s
+                                   """ WHERE Sequence = %s
                                    AND Condition_Name = %s
                                    AND Condition_Value = %s
                                    ORDER BY Experiment_ID ASC""",

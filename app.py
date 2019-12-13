@@ -71,7 +71,7 @@ def sideBySidePage():
                 
         
                         
-                        return render_template('side.html',formMVal = formMVal) 
+                        return render_template('side.html',formMVal = formMVal, measurements=measurements) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition(1)
