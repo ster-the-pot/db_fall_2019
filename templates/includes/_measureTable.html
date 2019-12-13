@@ -1,0 +1,43 @@
+{%if measurements%}
+<table class="table">
+    <thead class="thead-dark">
+        
+        <tr>
+            <th scope="col"> #</th>
+            <th scope="col">Measurement</th>
+            <th scope="col">Value of Measurement</th>
+        </tr>
+    </thead>
+    <tbody>
+            {%for tuple in measurements%}
+            <tr>
+                <th scope="row"> {{loop.index}}</th>
+                <td>{{tuple[0]}}</td> 
+                <td>{{tuple[1]}}</td>
+            </tr>
+            {%endfor%}
+    </tbody>
+</table>
+{%else %}
+<h1></h1>
+<table class="table">
+    <thead class="thead-dark">
+        
+        <tr>
+            <th scope="col"> #</th>
+            <th style="text-align:center" scope="col">Measurement</th>
+            <th  style="text-align:center"scope="col">Value of Measurement</th>
+        </tr>
+    </thead>
+    <tbody>
+            {%for tuple in range(1,4)%}
+            <tr>
+                <th scope="row"> {{loop.index}}</th>
+                <td style="text-align:center"></td> 
+                <td style="text-align:center"></td>
+            </tr>
+            {%endfor%}
+    </tbody>
+</table>
+
+{%endif%}

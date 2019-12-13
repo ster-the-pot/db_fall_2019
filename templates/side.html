@@ -5,13 +5,21 @@
     <h1 class="display-4">Query and Analysis: Side-By-Side Comparison</h1>
     <p class="lead">This page is designed to allow for query and analysis of two experiments. Given the
         experiments (sequence and set of conditions/values for each), the database will return all
-        measurements that the two experiments have in common</p>
+        measurements that the two experiments have in common.</p>
 </div>
 
 {% if showMeasure %}
 <script>
     $(document).ready(function () {
-        $("#mValModal1").modal('show');
+        $("#mValModal").modal('show');
+    });
+</script>
+{%endif%}
+
+{% if showMeasure2 %}
+<script>
+    $(document).ready(function () {
+        $("#mValModal2").modal('show');
     });
 </script>
 {%endif%}
@@ -20,11 +28,11 @@
 
 <div class="row card-group">
     <div class="card col-6">
-        <button type="button" data-toggle="modal" data-target="#mValModal1" style="background-color:green"
+        <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green"
             class=" row my-auto btn btn-success btn-lg">Set Experiment 1</button>
     </div>
 
-    <button type="button" data-toggle="modal" data-target="#mValModal1" style="background-color:green"
+    <button type="button" data-toggle="modal" data-target="#mValModal2" style="background-color:green"
         class=" col-6 my-auto btn btn-success btn-lg">Set Experiment 2</button>
 
 </div>
@@ -33,14 +41,14 @@
         <div class="card-body ">
             {%if experiment1%}
             <h5 class="card-title">{{experiment1.sequence}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{experiment1.filename}}</h6>
-                <p class="card-text">{{experiment1.description}}</p>
+            <h6 class="card-subtitle mb-2 text-muted">{{experiment1.filename}}</h6>
+            <p class="card-text">{{experiment1.description}}</p>
             {%else%}
-                <h5 class="card-title">Card title</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                    content.</p>
-                
+            <h5 class="card-title">Card title</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+
             {%endif%}
         </div>
     </div>
@@ -58,35 +66,15 @@
 
 
 
-{%if measurements%}
-<table class="table">
-    <thead class="thead-dark">
-
-        <tr>
-            <th scope="col"> #</th>
-            <th style="text-align:center" scope="col">Measurement</th>
-            <th style="text-align:center" scope="col">Value of Measurement</th>
-        </tr>
-    </thead>
-    <tbody>
-        {%for tuple in measurements%}
-        <tr>
-            <th scope="row"> {{loop.index}}</th>
-            <td style="text-align:center">{{tuple[0]}}</td>
-            <td style="text-align:center">{{tuple[1]}}</td>
-        </tr>
-        {%endfor%}
-    </tbody>
-</table>
-{%endif%}
+{%include 'includes/_measureTable.html'%}
 
 <!--Mval insert Modal -->
-<div class="modal fade" id="mValModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="mValModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Set Experiment</h5>
+                <h5 class="modal-title" id="exampleModalLabel"> Set Experiment 1</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -101,6 +89,33 @@
                 </form>
                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Query
+                    Experiment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Mval insert Modal -->
+<div class="modal fade" id="mValModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Set Experiment 2</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% include 'includes/_dualMeasurementValueModal.html'%}
+            </div>
+            <div class="modal-footer">
+                <form method="POST" id="addCondForm">
+                    <button type="submit" form="mValForm2" name="btn" value="addCond2" class="btn btn-secondary"
+                        style="background-color:green">Add Condition</button>
+                </form>
+                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button form="mValForm2" type="submit" name="btn" value="mVal2" class="btn btn-primary">Query
                     Experiment</button>
             </div>
         </div>

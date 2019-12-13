@@ -99,4 +99,22 @@ class QueryMeasurementForm(Form):
         return conditionList
 
 
+class DualQueryMeasurementForm(Form):
+    seq = SelectField(label="Select Sequence",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
+    
+    cond = FieldList(FormField(ConditionForm))
+
+    def addCondition(self):
+        self.cond.append_entry()
+
+    def getConditions(self):
+        conditionList = []
+        while(len(self.cond) is not 0):
+            conditionList.append(self.cond.pop_entry().data)
+            #conditionList.append({"condition":rawCond.})
+        return conditionList
+
+    def getSequence(self):
+        return self.seq.data
+
 

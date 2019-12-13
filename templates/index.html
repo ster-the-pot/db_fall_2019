@@ -2,18 +2,43 @@
 
 {% block body %}
 <div class="jumbotron" style="margin-bottom: 0px;">
-    <h1 class="display-4">Protein Synthesis Database Project</h1>
-    <p class="lead">Welcome to the Protein Synthesis project webpage! We are developing a tool to keep track of a study of gene expression at the messenger RNA (mRNA) level in different yeast strains. The mRNA is the intermediate between the DNA and protein. mRNAs are translated into protein. We measured RNA levels in different environmental conditions in order to determine how the levels change due to the environmental change. The data is presented in DNA sequence because of the procedure used to quantify the mRNA</p>
-    <hr class="my-4">
+  <h1 class="display-4">Protein Synthesis Database Project</h1>
+  <p class="lead">Welcome to the Protein Synthesis project webpage! We are developing a tool to keep track of a study of
+    gene expression at the messenger RNA (mRNA) level in different yeast strains. The mRNA is the intermediate between
+    the DNA and protein. mRNAs are translated into protein. We measured RNA levels in different environmental conditions
+    in order to determine how the levels change due to the environmental change. The data is presented in DNA sequence
+    because of the procedure used to quantify the mRNA</p>
+  <hr class="my-4">
 </div>
 <div class="page-header">
-  <h1>Getting Started:</h1>
-</div>
-  <!-- 16:9 aspect ratio -->
 
-<div class="embed-responsive embed-responsive-16by9">
-    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/fCd6B5HRaZ8"></iframe>
-</div>
+  <div class="row">
+    <div class="card col-4" style="width: 18rem; text-align:center;">
+      <div class="card-body ">
+        <h5 style="background-color:green; color:white;" class="card-title">Data Input</h5>
+        <h6 class="card-subtitle mb-2 text-muted">CSV and Web Input</h6>
+        <p class="card-text">Visit the Data Input page to get started entering your experiment data. This page allows
+          for the entering of data from both the web-client, and from the uploading of a compatible csv file.</p>
+      </div>
+    </div>
+    <div class="embed-responsive embed-responsive-16by9 col-4">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/fCd6B5HRaZ8"></iframe>
+    </div>
+    <div class="card col-4 " style="width: 18rem; text-align:center;">
+      <div class="card-body ">
+        <h5 style="background-color:green; color:white;" class="card-title">Query and Analysis</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Experiment and Sequence</h6>
+        <p class="card-text">Query and View Data from the Experiment Info and Side-By-Side
+            comparison pages. These pages allow for you to look for specific experiments from the database, and compare
+            results across multiple experiments.</p>
+      </div>
 
 
-{% endblock %}
+      <div class="col-4">
+
+      </div>
+    </div>
+
+
+
+    {% endblock %}

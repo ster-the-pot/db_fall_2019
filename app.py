@@ -36,25 +36,44 @@ def experimentPage():
 @app.route("/query/side", methods=["GET","POST"])
 def sideBySidePage():
         formMVal = forms.QueryMeasurementForm(request.form)
-        formMVal1 = forms.QueryMeasurementForm(request.form)
+        formMVal2 = forms.DualQueryMeasurementForm(request.form)
         
         if(request.method=="POST"):
+                
                 if(request.form["btn"] == "mVal" and formMVal.validate()):
                         print("Do Experiment Lookup")
                         #results of query
                         conditionList = formMVal.getConditions()
                         sequence = formMVal.sequence.data
+                        print(sequence)
+                        print(conditionList)
                         #################################
                         measurements = [("Measurement1","MeasurementValue1"),("Measurement2","MeasurementValue2"),("Measurement3","MeasurementValue3")]
-                        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1, measurements=measurements) 
+                        return render_template('side.html',formMVal=formMVal, formMVal2=formMVal2, measurements=measurements) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition()
+                        return render_template('side.html',formMVal=formMVal, formMVal2=formMVal2, showMeasure="true")
+
+                elif(request.form["btn"] == "mVal2" and formMVal2.validate()):
+                        print("Do Experiment Lookup2")
+                        #results of query
+                        conditionList2 = formMVal2.getConditions()
+                        sequence2 = formMVal2.getSequence()
+                        print(sequence2)
+                        print(conditionList2)
+
+                        #################################
+                        measurements = [("Measurement1","MeasurementValue1"),("Measurement2","MeasurementValue2"),("Measurement3","MeasurementValue3")]
+                        return render_template('side.html',formMVal=formMVal, formMVal2=formMVal2, measurements=measurements) 
+                elif(request.form["btn"] == "addCond2"):
+                        print("add conditions2")
+                        formMVal2.addCondition()
                         
-                        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1, showMeasure="true")
+                        return render_template('side.html',formMVal=formMVal, formMVal2=formMVal2, showMeasure2="true")
          
 
-        return render_template('side.html',formMVal=formMVal, formMVal1=formMVal1)
+        return render_template('side.html',formMVal=formMVal, formMVal2=formMVal2)
 
 
 
