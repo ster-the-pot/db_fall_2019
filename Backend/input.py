@@ -184,7 +184,7 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                    (sequence1, sequence1, sequence1, sequence1))
 
     ret = cursor.fetchall()
-
+    print(ret + "ID's")
     checks = []
     prevCheck = False
     for iD in ret:
@@ -206,8 +206,8 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                     checks.append(i[0])
                 prevCheck = True
             else:
-                temp = []
-                for i in check:
+                for i in checks:
+                    print(checks)
                     cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
                                     Condition_Value = %s AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s

@@ -66,7 +66,6 @@ def sideBySidePage():
                         print(formMVal.getConditions(2))
 
                         measurements = input.side_by_side(formMVal.getSequence(1),formMVal.getConditions(1),formMVal.getSequence(2),formMVal.getConditions(2),cursor)
-
                         print(measurements)
                         
                 
