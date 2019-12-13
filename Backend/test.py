@@ -1,12 +1,14 @@
+import mysql.connector as mysql
+import csvparse
 
 
-testString = "SELECT FROM "
+mydb = mysql.connect(
+    host="localhost",
+    user="root",
+    passwd="2112.Bruins.Chase.98.",
+    database="biology"
+)
 
+cursor = mydb.cursor()
 
-int = 5
-
-conditions = ['iron', 'steel', 'copper']
-
-testString = "SELECT FROM " + int
-
-print(testString)
+csvparse.csvInput("exptest.csv", cursor)
