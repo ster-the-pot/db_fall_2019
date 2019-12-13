@@ -2,6 +2,7 @@ import mysql.connector as mysql
 import pandas as pd
 import numpy as np
 
+
 def csvInput(csv, cursor):
     df = pd.read_csv(csv, index_col=0)
 

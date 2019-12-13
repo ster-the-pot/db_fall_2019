@@ -3,16 +3,40 @@ from mysql.connector import errors as errors
 
 
 def conditionAdd(name, domain, cursor):
+    n = name
+    d = domain
+    if d.lower() == "float":
+        d = "Float"
+    elif domain.lower() == "boolean":
+        d = "Boolean"
+    elif domain.lower() == "int":
+        d = "Int"
+    elif domain.lower() == "string":
+        d = "String"
+    else:
+        return False
     try:
-        cursor.execute("""INSERT INTO Condition_Domains Values(%s, %s)""", (name, domain))
+        cursor.execute("""INSERT INTO Condition_Domains Values(%s, %s)""", (n, d))
     except (errors.Error, errors.Warning) as error:
         return False
     return True
 
 
 def measurementAdd(name, domain, cursor):
+    n = name
+    d = domain
+    if d.lower() == "float":
+        d = "Float"
+    elif domain.lower() == "boolean":
+        d = "Boolean"
+    elif domain.lower() == "int":
+        d = "Int"
+    elif domain.lower() == "string":
+        d = "String"
+    else:
+        return False
     try:
-        cursor.execute("""INSERT INTO Measurement_Domains Values(%s, %s)""", (name, domain))
+        cursor.execute("""INSERT INTO Measurement_Domains Values(%s, %s)""", (n, d))
     except (errors.Error, errors.Warning):
         return False
     return True
