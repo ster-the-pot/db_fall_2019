@@ -60,12 +60,11 @@ def sideBySidePage():
                 if(request.form["btn"] == "mVal" and formMVal.validate()):
                         print("Do Experiment Lookup")
                         
-                        print(formMVal.getSequence(1))
-                        print(formMVal.getConditions(1))
-                        print(formMVal.getSequence(2))
-                        print(formMVal.getConditions(2))
+                        
+                        conditions1 =formMVal.getConditions(1)
+                        conditions2=formMVal.getConditions(2)
 
-                        measurements = input.side_by_side(formMVal.getSequence(1),formMVal.getConditions(1),formMVal.getSequence(2),formMVal.getConditions(2),cursor)
+                        measurements = input.side_by_side(formMVal.getSequence(1),conditions1,formMVal.getSequence(2),conditions2,cursor)
                         print(measurements)
                         
                 

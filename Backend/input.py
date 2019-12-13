@@ -116,7 +116,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     print(domain)
 
     try:
-        cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
+        cursor.execute("""INSERT INTO Measurements_""" + domain[0] + """ Values (%s, %s, %s)""",
                         (experiment.iD, measurement, value))
     except (errors.Error, errors.Warning) as error:
         print(error)
@@ -174,6 +174,10 @@ def experimentInfo(sequence, conditions, cursor):
 
 
 def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
+    print(conditions1, "in funct conditions")
+    print(sequence1, " seq1")
+    print(sequence2, "seq 2")
+    print(conditions2, "cond2")
     shared = []
     measurements1 = {}
     measurements2 = {}
@@ -184,11 +188,15 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                    (sequence1, sequence1, sequence1, sequence1))
 
     ret = cursor.fetchall()
-    print(ret + "ID's")
+    print(ret, " ID's")
     checks = []
     prevCheck = False
+    
     for iD in ret:
+        print(iD, " ID")
+        print(conditions1, " conditions1")
         for condition in conditions1:
+            print(condition, " condition")
             if not prevCheck:
                 cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
                                 Experiment_ID = %s) UNION 
@@ -205,6 +213,7 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                 for i in iDs:
                     checks.append(i[0])
                 prevCheck = True
+                print(checks , "after prevCheck")
             else:
                 for i in checks:
                     print(checks)
@@ -225,10 +234,11 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                         checks.remove(i)
 
     for c in checks:
-        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
-                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %s") UNION 
-                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
-                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s""",
+        print(c, " c is")
+        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurements_Int Where Experiment_ID = %s) UNION 
+                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_Float Where Experiment_ID = %s) UNION 
+                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_Boolean Where Experiment_ID = %s) UNION 
+                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_String Where Experiment_ID = %s)""",
                         (c, c, c, c))
         results1 = cursor.fetchall()
 
@@ -283,10 +293,10 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                         checks.remove(i)
 
     for c in checks:
-        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
-                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %s") UNION 
-                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
-                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s""",
+        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurements_Int Where Experiment_ID = %s) UNION 
+                           (SELECT Measurement_Name, Measurement_Value FROM Measurements_Float Where Experiment_ID = %s) UNION 
+                           (SELECT Measurement_Name, Measurement_Value FROM Measurements_Boolean Where Experiment_ID = %s) UNION 
+                           (SELECT Measurement_Name, Measurement_Value FROM Measurements_String Where Experiment_ID = %s)""",
                        (c, c, c, c))
         results2 = cursor.fetchall()
 
@@ -306,9 +316,9 @@ def multipleExp(sequences, conditions, measurements, cursor):
     for sequence in sequences:
         entry = ExperimentReturn()
         cursor.execute("""(SELECT Experiment_ID FROM Experiment_Int WHERE Sequence = %s) UNION 
-                       "(SELECT Experiment_ID FROM Experiment_Float WHERE Sequence = %s) UNION 
-                       "(SELECT Experiment_ID FROM Experiment_Boolean WHERE Sequence = %s) UNION 
-                       "(SELECT Experiment_ID FROM Experiment_String WHERE Sequence = %s)""",
+                       (SELECT Experiment_ID FROM Experiment_Float WHERE Sequence = %s) UNION 
+                       (SELECT Experiment_ID FROM Experiment_Boolean WHERE Sequence = %s) UNION 
+                       (SELECT Experiment_ID FROM Experiment_String WHERE Sequence = %s)""",
                        (sequence, sequence, sequence, sequence))
         ids = cursor.fetchall()
 
@@ -338,16 +348,16 @@ def multipleExp(sequences, conditions, measurements, cursor):
                     entry.sequence = exp[1]
                     entry.conditions[exp[2]] = exp[3]
                     for measurement in measurements:
-                        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int 
+                        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurements_Int 
                                        WHERE Measurement_Name = %s 
                                        AND Experiment_ID = %s) UNION 
-                                       (SELECT Measurement_Name, Measurement_Value FROM Measurement_Float 
+                                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_Float 
                                        WHERE Measurement_Name = %s 
                                        AND Experiment_ID = %s) UNION 
-                                       (SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean 
+                                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_Boolean 
                                        WHERE Measurement_Name = %s 
                                        AND Experiment_ID = %s) UNION 
-                                       (SELECT Measurement_Name, Measurement_Value FROM Measurement_String 
+                                       (SELECT Measurement_Name, Measurement_Value FROM Measurements_String 
                                        WHERE Measurement_Name = %s 
                                        AND Experiment_ID = %s)""",
                                        (measurement, iD, measurement, iD, measurement, iD, measurement, iD))
