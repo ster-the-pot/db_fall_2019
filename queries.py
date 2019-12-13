@@ -1,4 +1,14 @@
 # file for all database queries/activities
+import mysql.connector as mysql
+
+mydb = mysql.connect(
+    host="18.224.202.17",
+    user="pythonApp",
+    passwd="bryceSterlingDB",
+    database="biology"
+)
+
+cursor = mydb.cursor()
 
 def getAllSequences(cursor):
     results = []
@@ -23,5 +33,5 @@ def getAllConditions(sequence, cursor):
 
     conditions = cursor.fetchall()
     for condition in conditions:
-        results[conditon[0]] = condition[1]
+        results[condition[0]] = condition[1]
     return results

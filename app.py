@@ -1,8 +1,19 @@
 from flask import Flask, render_template,request,redirect,url_for,session, logging, flash
 from wtforms import Form,StringField,TextAreaField,validators, SelectField
-import mysql.connector
 import forms
 import queries
+import sys
+sys.path.append('Backend/')
+import Backend.csvparse as csvparse
+from queries import cursor,mydb
+import Backend.input as input
+
+
+
+## SQL Server connection 
+
+
+###### Main Web App ######
 
 app = Flask(__name__)
 app.debug= True
@@ -96,8 +107,20 @@ def inputPage():
 
                 if(request.form["btn"] == "condition" and formCond.validate()):
                         print("Do Condition Insert")
+                        print(formCond.conditions.data)
+                        print(formCond.domain.data)
+                
+                        if(input.conditionAdd(formCond.conditions.data, formCond.domain.data,cursor)):
+                                flash("Insertion Successful","success")
+                                mydb.commit()
+                        else:
+                                flash("Insertion Failed", "failed")
+
                 elif(request.form["btn"] == "measure" and formMeasure.validate()):
                         print("Do measure Insert")
+                        print(formMeasure.measurement.data)
+                        print(formMeasure.domain.data)
+
                 elif(request.form["btn"] == "sequence" and formSeq.validate()):
                         print("Do sequence modify")
                 elif(request.form["btn"] =="mVal" and formMVal.validate()):
@@ -121,7 +144,9 @@ def inputPage():
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true",formFile=formFile)
                 elif(request.form["btn"] == "fileUpload" and formFile.validate()):
                         print("file upload")
-                        if(forms.validateFile(request.files["file"])):
+                        if(forms.validateFile(request.files["file"])!= False):
+                                # send file to database
+                                csvparse.csvInput(request.files["file"],cursor)
                                 flash("File Uploaded Successfully","success")
                         else:
                                 flash("File Failed to Upload. Invalid File Type!","failed")

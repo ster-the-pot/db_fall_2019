@@ -2,6 +2,7 @@ from flask import Flask, render_template, request,redirect,url_for,session, logg
 from wtforms import Form,StringField,TextAreaField,validators, SelectField,RadioField,ValidationError,FieldList,FormField, FileField
 from werkzeug.utils import secure_filename
 import os
+from Backend.csvparse import csvInput
 
 import mysql.connector
 import queries
@@ -59,7 +60,6 @@ class InsertMeasurementForm(Form):
 #CSV FILE UPLOAD
 
 def validateFile(file):
-    print(file.filename)
     if(file.filename == ""):
         return False
     filename = file.filename
@@ -68,7 +68,7 @@ def validateFile(file):
         filename = secure_filename(filename)
         print(filename)
         # call file save function
-        return True
+        return file
     else:
         return False
     
