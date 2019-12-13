@@ -96,6 +96,8 @@ def inputPage():
         formMVal = forms.InsertMeasurementForm(request.form)
         formFile = forms.CSVFileUpload(request.form)
 
+        #formMVal.measurement.choices=queries.getAllMeasurementNames(queries.cursor)
+
         
         #seqList=queries.getAllSequences()
 
@@ -147,6 +149,9 @@ def inputPage():
                         print(mVal)
                         conditionList = formMVal.getConditions()
                         print(conditionList)
+                        #exp = Experiment(sequence,conditionList,)
+
+                        #input.experimentAdd()
                         
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
                         

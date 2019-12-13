@@ -10,7 +10,7 @@ mydb = mysql.connect(
 
 cursor = mydb.cursor()
 
-def getAllSequences(cursor):
+def getAllSequenceNames(cursor):
     results = []
     cursor.execute("SELECT Sequence FROM Sequences")
 
@@ -21,11 +21,31 @@ def getAllSequences(cursor):
 
 
 def getAllConditions(cursor):
-    results = {}
     cursor.execute("""(SELECT Condition_Name, Condition_Value FROM Experiment_Int) UNION 
                    (SELECT Condition_Name, Condition_Value FROM Experiment_Float) UNION 
                    (SELECT Condition_Name, Condition_Value FROM Experiment_Boolean) UNION 
-                   (SELECT Condition_Name, Condition_Value FROM Experiment_Boolean)""")
+                   (SELECT Condition_Name, Condition_Value FROM Experiment_String)""")
 
     conditions = cursor.fetchall()
     return conditions
+
+
+def getAllMeasurementNames(cursor):
+    results = []
+    cursor.execute("""SELECT Measurement_Name FROM Measurement_Domains""")
+    measurements = cursor.fetchall()
+    print("HERE")
+    for measurement in measurements:
+        print(str(measurement[0]), str(measurement[0]))
+        results.append((str(measurement[0]), str(measurement[0])))
+    return results
+
+
+def getAllConditionNames(cursor):
+    results = []
+    cursor.execute("""SELECT Condition_Name FROM Condition_Domains""")
+    measurements = cursor.fetchall()
+    for measurement in measurements:
+        print(str(measurement[0]), str(measurement[0]))
+        results.append((str(measurement[0]), str(measurement[0])))
+    return results

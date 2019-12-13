@@ -33,13 +33,13 @@ class ModifySequenceForm(Form):
 
 #used for rendering a condition input with value for said condition
 class ConditionForm(Form):
-    condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditions(queries.cursor))
+    condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
     value= value  = StringField('', [validators.Length(min=1,max=50), validateName])
 
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
-    sequence = SelectField(label="Select Sequence",choices=queries.getAllSequences(queries.cursor))
-    measurement = SelectField("Measurement", default="Select Measurement", choices=[("Me1","Me1"),("Me2","Me2")])
+    sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
+    measurement = SelectField("Measurement", default="Select Measurement", choices=queries.getAllMeasurementNames(queries.cursor))
     value  = StringField('Measurement Value', [validators.Length(min=1,max=50), validateName])
 
     condList = FieldList(FormField(ConditionForm))
