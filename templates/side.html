@@ -16,25 +16,13 @@
 </script>
 {%endif%}
 
-{% if showMeasure2 %}
-<script>
-    $(document).ready(function () {
-        $("#mValModal2").modal('show');
-    });
-</script>
-{%endif%}
-
 
 
 <div class="row card-group">
-    <div class="card col-6">
+    <div class="card">
         <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green"
-            class=" row my-auto btn btn-success btn-lg">Set Experiment 1</button>
+            class=" row my-auto btn btn-success btn-lg">Compare Experiments</button>
     </div>
-
-    <button type="button" data-toggle="modal" data-target="#mValModal2" style="background-color:green"
-        class=" col-6 my-auto btn btn-success btn-lg">Set Experiment 2</button>
-
 </div>
 <div class="row card-group">
     <div class="card col 6" style="width: 18rem;">
@@ -74,33 +62,6 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Set Experiment 1</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                {% include 'includes/_measurementValueModal.html'%}
-            </div>
-            <div class="modal-footer">
-                <form method="POST" id="addCondForm">
-                    <button type="submit" form="mValForm" name="btn" value="addCond" class="btn btn-secondary"
-                        style="background-color:green">Add Condition</button>
-                </form>
-                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Query
-                    Experiment</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Mval insert Modal -->
-<div class="modal fade" id="mValModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"> Set Experiment 2</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -111,12 +72,15 @@
             </div>
             <div class="modal-footer">
                 <form method="POST" id="addCondForm">
-                    <button type="submit" form="mValForm2" name="btn" value="addCond2" class="btn btn-secondary"
-                        style="background-color:green">Add Condition</button>
+                    <button type="submit" form="mValForm" name="btn" value="addCond" class="btn btn-secondary"
+                        style="background-color:green">Add 1</button>
                 </form>
+                <form method="POST" id="addCondForm2">
+                        <button type="submit" form="mValForm" name="btn" value="addCond2" class="btn btn-secondary"
+                            style="background-color:green">Add 2</button>
+                    </form>
                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button form="mValForm2" type="submit" name="btn" value="mVal2" class="btn btn-primary">Query
-                    Experiment</button>
+                <button form="mValForm" type="submit" name="btn" value="mVal" class="btn btn-primary">Compare Experiments</button>
             </div>
         </div>
     </div>
