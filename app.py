@@ -173,6 +173,7 @@ def inputPage():
                         if(forms.validateFile(request.files["file"])!= False):
                                 # send file to database
                                 csvparse.csvInput(request.files["file"],cursor)
+                                mydb.commit()
                                 flash("File Uploaded Successfully","success")
                         else:
                                 flash("File Failed to Upload. Invalid File Type!","failed")

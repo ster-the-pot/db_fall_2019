@@ -88,7 +88,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
                                WHERE Sequence = %s 
                                AND Condition_Name = %s
-                               AND Condition_Value = %s""", (experiment.sequence, initCond, initValue))
+                               AND Condition_Value = %s ORDER BY Experiment_ID ASC""", (experiment.sequence, initCond, initValue))
                 expIDs = cursor.fetchall()
 
                 if expIDs is False:
@@ -97,6 +97,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 for i in expIDs:
                     iD = i
                 try:
+                    print(iD, "PRINTING ID")
                     cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
                                    (iD, experiment.sequence, condition, experiment.conditions[condition]))
                 except (errors.Error, errors.Warning) as error:
@@ -159,6 +160,7 @@ def experimentInfo(sequence, conditions, cursor):
 
             exps = cursor.fetchall()
             for exp in exps:
+                print(exp)
                 experiment.measurements[exp[1]] = exp[2]
                 answer.append((str(exp[1]), str(exp[2])))
     print(answer)
