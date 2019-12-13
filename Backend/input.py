@@ -106,8 +106,10 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                                     AND Sequence = %s
                                     AND Condition_Name = %s
                                     AND Condition_Value = %s""", (iD, experiment.sequence, initCont, initValue))
+                    insertID = cursor.fetchone()
+
                     cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
-                                   (iD, experiment.sequence, condition, experiment.conditions[condition]))
+                                   (insertID[0], experiment.sequence, condition, experiment.conditions[condition]))
                 except (errors.Error, errors.Warning) as error:
                     print(error)
                     return False
