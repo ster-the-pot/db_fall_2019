@@ -59,23 +59,24 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     print(conditions)
     for condition in conditions:
         experiment.conditions[condition["condition"]] = condition["value"]
-            
+
     iD = 0
     for condition in experiment.conditions:
         cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
         domain = cursor.fetchall()
-        
+
         if domain is False:
             return False
         prevInsert = False
-    
+
         initCond = 0
         initValue = 0
         for d in domain:
             if not prevInsert:
                 try:
                     cursor.execute(
-                        """INSERT INTO Experiment_"""+d[0]+ """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
+                        """INSERT INTO Experiment_""" + d[
+                            0] + """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
                         (experiment.sequence, condition, experiment.conditions[condition]))
                     prevInsert = True
                     initCond = condition
@@ -85,10 +86,10 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                     return False
 
             else:
-                cursor.execute("""SELECT Experiment_ID FROM Experiment_"""+d[0]+ """
+                cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
                                WHERE Sequence = %s 
                                AND Condition_Name = %s
-                               AND Condition_Value = %s""", ( experiment.sequence, initCond, initValue))
+                               AND Condition_Value = %s""", (experiment.sequence, initCond, initValue))
                 expIDs = cursor.fetchall()
 
                 if expIDs is False:
@@ -97,7 +98,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 for i in expIDs:
                     iD = i
                 try:
-                    cursor.execute("""INSERT INTO Experiment_"""+d[0] +""" VALUES (%s, %s, %s, %s)""",
+                    cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
                                    (iD, experiment.sequence, condition, experiment.conditions[condition]))
                 except (errors.Error, errors.Warning) as error:
                     print(error)
@@ -109,7 +110,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
             continue
         for d in domain:
             try:
-                cursor.execute("""INSERT INTO Measurements_"""+d[0] + """ Values (%s, %s, %s)""",
+                cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
                                (iD, measurement, experiment.measurements[measurement]))
             except (errors.Error, errors.Warning) as error:
                 print(error)
@@ -117,17 +118,18 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     return True
 
 
-def experimentInfo(condition, value, cursor):
+def experimentInfo(sequence, condition, value, cursor):
     answer = []
     cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
     domain = cursor.fetchall()
     if domain is False:
         return
     cursor.execute("""SELECT Experiment_ID 
-                   FROM Experiment_%s 
+                   FROM Experiment_""" + domain[0] + """ 
                    WHERE Condition_Name = %s 
                    AND Condition_Value = %s 
-                   ORDER BY Experiment_ID DESC""", (domain[0], condition, value))
+                   AND Sequence = %s
+                   ORDER BY Experiment_ID DESC""", (domain[0], condition, value, sequence))
 
     expIDs = cursor.fetchall()
 
@@ -135,15 +137,16 @@ def experimentInfo(condition, value, cursor):
         return
     for iD in expIDs:
         ex = ExperimentReturn()
+        ex.sequence = sequence
         ex.id = iD
         ex.conditions[str(condition)] = value
 
-        cursor.execute("""SELECT Sequence FROM Experiment_%s 
-                       WHERE Experiment_ID = %s""", (domain[0], iD))
+        # cursor.execute("""SELECT Sequence FROM Experiment_%s
+        #              WHERE Experiment_ID = %s""", (domain[0], iD))
 
-        sequence = cursor.fetchone()
+        # sequence = cursor.fetchone()
 
-        ex.sequence = sequence[0]
+        # ex.sequence = sequence[0]
 
         cursor.execute("""(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) UNION 
                        "(SELECT DISTINCT * FROM Measurement_Float WHERE Experiment_ID = %s) UNION 
@@ -158,35 +161,6 @@ def experimentInfo(condition, value, cursor):
         answer.append(ex)
 
     return answer
-
-
-def containsSequence(sequence, cursor):
-    exps = []
-
-    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int WHERE Sequence = %s) UNION 
-                   "(SELECT DISTINCT Experiment_ID FROM Experiment_Float WHERE Sequence = %s) UNION 
-                   "(SELECT DISTINCT Experiment_ID FROM Experiment_Boolean WHERE Sequence = %s) UNION 
-                   "(SELECT DISTINCT Experiment_ID FROM Experiment_String WHERE Sequence = %s)""",
-                   (sequence, sequence, sequence, sequence))
-
-    iDs = cursor.fetchall()
-
-    for iD in iDs:
-        exp = ExperimentReturn()
-        exp.iD = iD[0]
-        exp.sequence = sequence
-        cursor.execute("""(SELECT Condition_Name, Condition_Value FROM Experiment_Int WHERE Experiment_ID = %s) UNION 
-                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Float WHERE Experiment_ID = %s) UNION 
-                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Boolean WHERE Experiment_ID = %s) UNION 
-                       "(SELECT Condition_Name, Condition_Value FROM Experiment_Int WHERE Experiment_ID = %s)""",
-                       (iD, iD, iD, iD))
-
-        results = cursor.fetchall()
-        for result in results:
-            exp.conditions[result[0]] = result[1]
-        if exp not in exps:
-            exps.append(exp)
-    return exps
 
 
 def side_by_side(exp1, exp2, cursor):

@@ -65,7 +65,7 @@ def csvInput(csv, cursor):
                     prevInsert = True
                 else:
                     cursor.execute("""SELECT DISTINCT Experiment_ID"
-                                   FROM Experiment_%s""" + domain +
+                                   FROM Experiment_""" + domain +
                                    """WHERE Sequence = %s
                                    AND Condition_Name = %s
                                    AND Condition_Value = %s""",
@@ -73,7 +73,7 @@ def csvInput(csv, cursor):
                     expIDs = cursor.fetchall()
                     for result in expIDs:
                         iD = result[0]
-                    cursor.execute("""INSERT INTO Experiment_%s VALUES (%s, %s, %s)""",
+                    cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
                                    (experiment[0], c[0], value))
         if iD == -1:
             continue
