@@ -29,31 +29,9 @@ def getAllConditions(cursor):
     conditions = cursor.fetchall()
     return conditions
 
-<<<<<<< HEAD
-
-def getAllMeasurementNames(cursor):
-    results = []
-    cursor.execute("""SELECT Measurement_Name FROM Measurement_Domains""")
-    measurements = cursor.fetchall()
-
-    for measurement in measurements:
-        print(str(measurement[0]), str(measurement[0]))
-        results.append((str(measurement[0]), str(measurement[0])))
-    return results
-
-
 def getAllConditionNames(cursor):
     results = []
-    cursor.execute("""SELECT Condition_Name FROM Condition_Domains""")
-    measurements = cursor.fetchall()
-    for measurement in measurements:
-        print(str(measurement[0]), str(measurement[0]))
-        results.append((str(measurement[0]), str(measurement[0])))
-    return results
-=======
-def getAllConditionNames(cursor):
-    results = []
-    cursor.exeucte("SELECT Condition_Name FROM Condition_Domains")
+    cursor.execute("SELECT Condition_Name FROM Condition_Domains")
 
     conditions = cursor.fetchall()
 
@@ -63,11 +41,10 @@ def getAllConditionNames(cursor):
 
 def getAllMeasurementNames(cursor):
     results = []
-    cursor.exeucte("SELECT Measurement_Name FROM Measurment_Domains")
+    cursor.execute("SELECT Measurement_Name FROM Measurement_Domains")
 
     measurements = cursor.fetchall()
 
     for measurement in measurements:
         results.append((str(measurement[0]), str(measurement[0])))
     return results
->>>>>>> 2df36cb533484462c9625e335de06a80a9196123
