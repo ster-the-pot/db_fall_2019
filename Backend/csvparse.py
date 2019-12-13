@@ -7,13 +7,17 @@ def csvInput(csv, cursor):
     df = pd.read_csv(csv, index_col=0)
 
     for column in df.columns:
-        df[column].replace('', np.nan, inplace=True)
+        df[column].replace(r'^\s+$', np.nan, inplace=True, regex=True)
 
     for column in df.columns:
 
         experiment = column.split('_', maxsplit=1)
-        cursor.execute("""SELECT Sequence FROM Sequences WHERE Sequence=%s""", (experiment[0],))
 
+        try:
+            cursor.execute("""INSERT INTO Sequences Values(%s, %s, %s) ON DUPLICATE KEY UPDATE Sequence = %s""",
+                           (experiment[0], None, None, name))
+        except (errors.Error, errors.Warning):
+            print(error)
         sequence = cursor.fetchall()
 
         if sequence is False:
@@ -57,7 +61,7 @@ def csvInput(csv, cursor):
                 else:
                     continue
                 if not prevInsert:
-                    cursor.execute("""INSERT INTO Experiment_%s""" + domain +
+                    cursor.execute("""INSERT INTO Experiment_""" + domain +
                                    """(Sequence, Condition_Name, Condition_Value) VALUES %s"
                                    "(%s, %s, %s)""", (experiment[0], c[0], value))
                     initCond = c[0]
@@ -68,13 +72,17 @@ def csvInput(csv, cursor):
                                    FROM Experiment_""" + domain +
                                    """WHERE Sequence = %s
                                    AND Condition_Name = %s
-                                   AND Condition_Value = %s""",
+                                   AND Condition_Value = %s
+                                   ORDER BY Experiment_ID ASC""",
                                    (experiment[0], initCond, initValue))
                     expIDs = cursor.fetchall()
                     for result in expIDs:
                         iD = result[0]
-                    cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
-                                   (experiment[0], c[0], value))
+                    try:
+                        cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
+                                       (experiment[0], c[0], value))
+                    except (mysql.errors.Error, mysql.errors.Warning) as error:
+                        print(error)
         if iD == -1:
             continue
         for row in df.index.values:
@@ -106,5 +114,9 @@ def csvInput(csv, cursor):
                     rValue = str(cell)
                 else:
                     continue
-                cursor.execute("""INSERT INTO Measurement_""" + rDomain +
-                               """ VALUES (%s, %s, %s)""", (iD, r[0], rValue))
+                try:
+                    cursor.execute("""INSERT INTO Measurements_""" + rDomain +
+                                   """ VALUES (%s, %s, %s)""", (iD, r[0], rValue))
+                except (mysql.errors.Error, mysql.errors.Warning) as error:
+                    print(error)
+    return True
