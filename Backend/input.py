@@ -115,7 +115,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
         for d in domain:
             try:
                 cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
-                               (iD, measurement, experiment.measurements[measurement]))
+                               (experiment.iD, measurement, experiment.measurements[measurement]))
             except (errors.Error, errors.Warning) as error:
                 print(error)
                 return False
