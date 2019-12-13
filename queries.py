@@ -34,7 +34,7 @@ def getAllMeasurementNames(cursor):
     results = []
     cursor.execute("""SELECT Measurement_Name FROM Measurement_Domains""")
     measurements = cursor.fetchall()
-    print("HERE")
+
     for measurement in measurements:
         print(str(measurement[0]), str(measurement[0]))
         results.append((str(measurement[0]), str(measurement[0])))

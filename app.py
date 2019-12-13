@@ -96,7 +96,7 @@ def inputPage():
         formMVal = forms.InsertMeasurementForm(request.form)
         formFile = forms.CSVFileUpload(request.form)
 
-        #formMVal.measurement.choices=queries.getAllMeasurementNames(queries.cursor)
+        formMVal.measurement.choices=queries.getAllMeasurementNames(queries.cursor)
 
         
         #seqList=queries.getAllSequences()
@@ -116,6 +116,7 @@ def inputPage():
                                 mydb.commit()
                         else:
                                 flash("Insertion Failed", "failed")
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
 
                 elif(request.form["btn"] == "measure" and formMeasure.validate()):
                         print("Do measure Insert")
@@ -126,7 +127,7 @@ def inputPage():
                                 mydb.commit()
                         else:
                                 flash("Insertion Failed", "failed")
-                        
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
 
                 elif(request.form["btn"] == "sequence" and formSeq.validate()):
                         print("Do sequence modify")
@@ -136,6 +137,7 @@ def inputPage():
                                 mydb.commit()
                         else:
                                 flash("Insertion Failed", "failed")
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
 
 
                 elif(request.form["btn"] =="mVal" and formMVal.validate()):
@@ -144,12 +146,15 @@ def inputPage():
                         sequence = formMVal.sequence.data
                         measurement = formMVal.measurement.data
                         mVal = formMVal.value.data
-                        print(sequence)
-                        print(measurement)
-                        print(mVal)
+
+
                         conditionList = formMVal.getConditions()
-                        print(conditionList)
-                        #exp = Experiment(sequence,conditionList,)
+
+                        if(input.experimentAdd(sequence,conditionList,measurement,mVal,cursor)):
+                                flash("Insertion Successful","success")
+                                mydb.commit()
+                        else:
+                                flash("Insertion Failed", "failed")
 
                         #input.experimentAdd()
                         

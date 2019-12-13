@@ -46,7 +46,6 @@ class InsertMeasurementForm(Form):
 
     def addCondition(self):
         self.condList.append_entry()
-        print(self.condList)
 
     def getConditions(self):
         conditionList = []
