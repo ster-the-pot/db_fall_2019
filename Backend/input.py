@@ -89,7 +89,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                         continue
 
                     for i in expIDs:
-                        iD = i
+                        iD = i[0]
 
                     prevInsert = True
                     initCond = condition
