@@ -60,65 +60,67 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
         experiment.conditions[condition["condition"]] = condition["value"]
 
     iD = 0
+    prevInsert = False
     for condition in experiment.conditions:
         cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
-        domain = cursor.fetchall()
+        d = cursor.fetchone()
 
-        if domain is False:
+        if d is False:
             return False
-        prevInsert = False
+        
 
         initCond = 0
         initValue = 0
-        for d in domain:
-            if not prevInsert:
-                try:
-                    cursor.execute(
-                        """INSERT INTO Experiment_""" + d[
-                            0] + """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
-                        (experiment.sequence, condition, experiment.conditions[condition]))
-
-                    cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
-                                                   WHERE Sequence = %s 
-                                                   AND Condition_Name = %s
-                                                   AND Condition_Value = %s ORDER BY Experiment_ID ASC""",
-                                   (experiment.sequence, initCond, initValue))
-                    expIDs = cursor.fetchall()
-
-                    if expIDs is False:
-                        continue
-
-                    for i in expIDs:
-                        iD = i[0]
-
-                    prevInsert = True
-                    experiment.iD = iD
-                    initCond = condition
-                    initValue = experiment.conditions[condition]
-
-                except (errors.Error, errors.Warning) as error:
-                    print(error)
-                    return False
-
-            else:
-                try:
-                    cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
-                                   (experiment.iD, experiment.sequence, condition, experiment.conditions[condition]))
-                except (errors.Error, errors.Warning) as error:
-                    print(error)
-                    return False
-    for measurement in experiment.measurements:
-        cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
-        domain = cursor.fetchall()
-        if domain is False:
-            continue
-        for d in domain:
+        
+        if not prevInsert:
             try:
-                cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
-                               (experiment.iD, measurement, experiment.measurements[measurement]))
+                cursor.execute(
+                    """INSERT INTO Experiment_""" + d[
+                        0] + """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
+                    (experiment.sequence, condition, experiment.conditions[condition]))
+
+                cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
+                                                WHERE Sequence = %s 
+                                                AND Condition_Name = %s
+                                                AND Condition_Value = %s ORDER BY Experiment_ID ASC""",
+                                (experiment.sequence, initCond, initValue))
+                expIDs = cursor.fetchall()
+
+                if expIDs is False:
+                    continue
+
+                for i in expIDs:
+                    iD = i[0]
+
+                prevInsert = True
+                experiment.iD = iD
+                initCond = condition
+                initValue = experiment.conditions[condition]
+
             except (errors.Error, errors.Warning) as error:
                 print(error)
                 return False
+
+        else:
+            try:
+                cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
+                                (experiment.iD, experiment.sequence, condition, experiment.conditions[condition]))
+            except (errors.Error, errors.Warning) as error:
+                print(error)
+                return False
+    for measurement in experiment.measurements:
+        cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
+        domain = cursor.fetchone()
+        if domain is False:
+            continue
+        print(domain)
+        
+        try:
+            cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
+                            (experiment.iD, measurement, experiment.measurements[measurement]))
+        except (errors.Error, errors.Warning) as error:
+            print(error)
+            return False
     return True
 
 
