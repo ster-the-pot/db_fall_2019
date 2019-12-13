@@ -77,25 +77,30 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                         """INSERT INTO Experiment_""" + d[
                             0] + """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
                         (experiment.sequence, condition, experiment.conditions[condition]))
+
+                    cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
+                                                   WHERE Sequence = %s 
+                                                   AND Condition_Name = %s
+                                                   AND Condition_Value = %s ORDER BY Experiment_ID ASC""",
+                                   (experiment.sequence, initCond, initValue))
+                    expIDs = cursor.fetchall()
+
+                    if expIDs is False:
+                        continue
+
+                    for i in expIDs:
+                        iD = i
+
                     prevInsert = True
                     initCond = condition
                     initValue = experiment.conditions[condition]
+
+
                 except (errors.Error, errors.Warning) as error:
                     print(error)
                     return False
 
             else:
-                cursor.execute("""SELECT Experiment_ID FROM Experiment_""" + d[0] + """
-                               WHERE Sequence = %s 
-                               AND Condition_Name = %s
-                               AND Condition_Value = %s ORDER BY Experiment_ID ASC""", (experiment.sequence, initCond, initValue))
-                expIDs = cursor.fetchall()
-
-                if expIDs is False:
-                    continue
-
-                for i in expIDs:
-                    iD = i
                 try:
                     print(iD, "PRINTING ID")
                     cursor.execute("""INSERT INTO Experiment_""" + d[0] + """ VALUES (%s, %s, %s, %s)""",
