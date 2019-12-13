@@ -66,6 +66,7 @@ def sideBySidePage():
 
                         measurements = input.side_by_side(formMVal.getSequence(1),conditions1,formMVal.getSequence(2),conditions2,cursor)
                         print(measurements)
+                        mydb.commit()
                         
                 
                 
