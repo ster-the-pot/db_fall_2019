@@ -18,11 +18,6 @@ def csvInput(csv, cursor):
                            (experiment[0], None, None, name))
         except (errors.Error, errors.Warning):
             print(error)
-        sequence = cursor.fetchall()
-
-        if sequence is False:
-            # Output sequence missing error here
-            continue
 
         conditions = experiment[1].split('_')
         condList = [conditions[index] + '_' + conditions[index + 1] for index in range(len(conditions) - 1)]
