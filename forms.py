@@ -83,7 +83,7 @@ class CSVFileUpload(Form):
 
 
 class QueryMeasurementForm(Form):
-    sequence = SelectField(label="Select Sequence",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
+    sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
     
     condList = FieldList(FormField(ConditionForm))
 

@@ -125,7 +125,7 @@ def experimentInfo(sequence, conditions, cursor):
         experiment.conditions[condition["condition"]] = condition["value"]
     for condition in experiment.conditions:
         cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
-        domain = cursor.fetchall()
+        domain = cursor.fetchone()
         if domain is False:
             return
         cursor.execute("""SELECT DISTINCT Experiment_ID 
@@ -133,15 +133,16 @@ def experimentInfo(sequence, conditions, cursor):
                    WHERE Condition_Name = %s 
                    AND Condition_Value = %s 
                    AND Sequence = %s
-                   ORDER BY Experiment_ID DESC""", (domain[0], condition, value, sequence))
+                   ORDER BY Experiment_ID DESC""", (condition, experiment.conditions[condition], sequence))
 
         expIDs = cursor.fetchall()
 
         if expIDs is False:
             return
         for iD in expIDs:
+            print(iD[0])
             experiment.sequence = sequence
-            experiment.iD = iD
+            experiment.iD = iD[0]
 
             # cursor.execute("""SELECT Sequence FROM Experiment_%s
             #              WHERE Experiment_ID = %s""", (domain[0], iD))
@@ -150,17 +151,17 @@ def experimentInfo(sequence, conditions, cursor):
 
             # ex.sequence = sequence[0]
 
-            cursor.execute("""(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) UNION 
-                       "(SELECT DISTINCT * FROM Measurement_Float WHERE Experiment_ID = %s) UNION 
-                       "(SELECT DISTINCT * FROM Measurement_Boolean WHERE Experiment_ID = %s) UNION 
-                       "(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) 
-                       "ORDER BY Experiment_ID DESC""", (iD, iD, iD, iD))
+            cursor.execute("""(SELECT DISTINCT * FROM Measurements_Int WHERE Experiment_ID = %s) UNION 
+                       (SELECT DISTINCT * FROM Measurements_Float WHERE Experiment_ID = %s) UNION 
+                       (SELECT DISTINCT * FROM Measurements_Boolean WHERE Experiment_ID = %s) UNION 
+                       (SELECT DISTINCT * FROM Measurements_String WHERE Experiment_ID = %s) 
+                       ORDER BY Experiment_ID DESC""", (iD[0], iD[0], iD[0], iD[0]))
 
             exps = cursor.fetchall()
             for exp in exps:
-                ex.measurements[exp[1]] = exp[2]
+                experiment.measurements[exp[1]] = exp[2]
                 answer.append((str(exp[1]), str(exp[2])))
-
+    print(answer)
     return answer
 
 
