@@ -63,13 +63,14 @@ def csvInput(csv, cursor):
                     initValue = value
                     prevInsert = True
                 else:
+                    print(experiment[0], " exp[0]")
                     cursor.execute("""SELECT DISTINCT Experiment_ID"
                                    FROM Experiment_""" + domain +
-                                   """ WHERE Sequence = %s
+                                   """ WHERE Sequence = """ + experiment[0] + """
                                    AND Condition_Name = %s
                                    AND Condition_Value = %s
                                    ORDER BY Experiment_ID ASC""",
-                                   (experiment[0], initCond, initValue))
+                                   (initCond, initValue))
                     expIDs = cursor.fetchall()
                     for result in expIDs:
                         iD = result[0]
@@ -77,7 +78,7 @@ def csvInput(csv, cursor):
                         cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
                                        (experiment[0], c[0], value))
                     except (mysql.Error, mysql.Warning) as error:
-                        print(error)
+                        print(error) 
         if iD == -1:
             continue
         for row in df.index.values:
