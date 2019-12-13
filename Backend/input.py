@@ -4,8 +4,8 @@ from mysql.connector import errors as errors
 
 def conditionAdd(name, domain, cursor):
     try:
-        cursor.execute("""INSERT INTO Experiment_Domains Values(%s, %s)""", (name, domain))
-    except (errors.Error, errors.Warning):
+        cursor.execute("""INSERT INTO Condition_Domains Values(%s, %s)""", (name, domain))
+    except (errors.Error, errors.Warning) as error:
         return False
     return True
 

@@ -2,13 +2,6 @@ import mysql.connector as mysql
 import pandas as pd
 import numpy as np
 
-mydb = mysql.connect(
-    host="18.224.202.17",
-    user="pythonApp",
-    passwd="bryceSterlingDB"
-)
-
-
 def csvInput(csv, cursor):
     df = pd.read_csv(csv, index_col=0)
 
