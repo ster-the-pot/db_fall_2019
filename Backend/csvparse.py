@@ -62,7 +62,6 @@ def csvInput(csv, cursor):
                                    "(%s, %s, %s", (domain, experiment[0], c[0], value))
                     initCond = c[0]
                     initValue = value
-                    mydb.commit()
                     prevInsert = True
                 else:
                     cursor.execute("""SELECT DISTINCT Experiment_ID"
@@ -76,7 +75,6 @@ def csvInput(csv, cursor):
                         iD = result[0]
                     cursor.execute("""INSERT INTO Experiment_%s VALUES (%s, %s, %s)""",
                                    (domain, experiment[0], c[0], value))
-                    mydb.commit()
         if iD == -1:
             continue
         for row in df.index.values:
@@ -110,4 +108,3 @@ def csvInput(csv, cursor):
                     continue
                 cursor.execute("""INSERT INTO Measurement_%s" + rDomain +
                                " VALUES (%s, %s, %s)""", (rDomain, iD, r[0], rValue))
-                mydb.commit()

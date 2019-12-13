@@ -1,4 +1,4 @@
-from experiment import ExperimentReturn
+from experiment import ExperimentReturn, Experiment
 from mysql.connector import errors as errors
 
 
@@ -52,7 +52,13 @@ def sequenceAdd(name, description, cursor, file_name=None):
     return True
 
 
-def experimentAdd(experiment, cursor):
+def experimentAdd(sequence, conditions, measurement, value, cursor):
+    experiment = Experiment()
+    experiment.sequence = sequence
+    experiment.measurements[measurement] = value
+    for condition in conditions:
+        for c in range(len(conditions.values()-1)):
+            experiment.conditions[condition.values()[c]] = condition.values()[c+1]
     iD = 0
     for condition in experiment.conditions:
         cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
