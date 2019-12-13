@@ -75,8 +75,8 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
             if not prevInsert:
                 try:
                     cursor.execute(
-                        """INSERT INTO Experiment_%s (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
-                        (d[0], experiment.sequence, condition, experiment.conditions[condition]))
+                        """INSERT INTO Experiment_"""+d[0]+ """ (Sequence, Condition_Name, Condition_Value) VALUES (%s, %s, %s)""",
+                        (experiment.sequence, condition, experiment.conditions[condition]))
                     prevInsert = True
                     initCond = condition
                     initValue = experiment.conditions[condition]
@@ -85,10 +85,10 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                     return False
 
             else:
-                cursor.execute("""SELECT Experiment_ID FROM Experiment_%s
+                cursor.execute("""SELECT Experiment_ID FROM Experiment_"""+d[0]+ """
                                WHERE Sequence = %s 
                                AND Condition_Name = %s
-                               AND Condition_Value = %s""", (d[0], experiment.sequence, initCond, initValue))
+                               AND Condition_Value = %s""", ( experiment.sequence, initCond, initValue))
                 expIDs = cursor.fetchall()
 
                 if expIDs is False:
@@ -97,8 +97,8 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 for i in expIDs:
                     iD = i
                 try:
-                    cursor.execute("""INSERT INTO Experiment_%s VALUES (%s, %s, %s, %s)'""",
-                                   (d[0], iD, experiment.sequence, condition, experiment.conditions[condition]))
+                    cursor.execute("""INSERT INTO Experiment_"""+d[0] +""" VALUES (%s, %s, %s, %s)""",
+                                   (iD, experiment.sequence, condition, experiment.conditions[condition]))
                 except (errors.Error, errors.Warning) as error:
                     print(error)
                     return False
