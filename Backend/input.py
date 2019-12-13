@@ -191,15 +191,15 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
         for condition in conditions1:
             if not prevCheck:
                 cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                Condition_Value = %s) UNION 
+                                Experiment_ID = %s) UNION 
                                 (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                AND Condition_Value = %s) UNION 
+                                AND Experiment_ID = %s) UNION 
                                 (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                AND Condition_Value = %s) UNION 
+                                AND Experiment_ID = %s) UNION 
                                 (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                AND Condition_Value = %s)""",
-                               (condition["condition"], condition["value"], iD, condition["condition"], condition["value"], iD,
-                                condition["condition"], condition["value"], iD, condition["condition"], condition["value"], iD))
+                                AND Experiment_ID = %s)""",
+                               (condition["condition"], iD, condition["condition"], iD,
+                                condition["condition"], iD, condition["condition"], iD))
                 iDs = cursor.fetchall()
 
                 for i in iDs:
@@ -209,15 +209,15 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                 temp = []
                 for i in check:
                     cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                    Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                    AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                    AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                    AND Condition_Value = %s AND Experiment_ID = %s)""",
-                                    (condition["condition"], condition["value"], i, condition["condition"], condition["value"], i,
-                                    condition["condition"], condition["value"], i, condition["condition"], condition["value"], i))
+                                    AND Experiment_ID = %s)""",
+                                    (condition["condition"], i, condition["condition"], i,
+                                     condition["condition"], i, condition["condition"], i))
 
                     iDs = cursor.fetchall()
 
@@ -249,15 +249,15 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
         for condition in conditions2:
             if not prevCheck:
                 cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                    Condition_Value = %s) UNION 
+                                    Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                    AND Condition_Value = %s) UNION 
+                                    AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                    AND Condition_Value = %s) UNION 
+                                    AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                    AND Condition_Value = %s)""",
-                               (condition["condition"], condition["value"], condition["condition"], condition["value"],
-                                condition["condition"], condition["value"], condition["condition"], condition["value"]))
+                                    AND Experiment_ID = %s)""",
+                               (condition["condition"], iD, condition["condition"], iD,
+                                condition["condition"], iD, condition["condition"], iD))
                 iDs = cursor.fetchall()
 
                 for i in iDs:
@@ -267,17 +267,15 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                 temp = []
                 for i in checks:
                     cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                        Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        Experiment_ID = %s) UNION 
                                         (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                        AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        AND Experiment_ID = %s) UNION 
                                         (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                        AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        AND Experiment_ID = %s) UNION 
                                         (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                        AND Condition_Value = %s AND Experiment_ID = %s)""",
-                                   (condition["condition"], condition["value"], i, condition["condition"],
-                                    condition["value"], i,
-                                    condition["condition"], condition["value"], i, condition["condition"],
-                                    condition["value"], i))
+                                        AND Experiment_ID = %s)""",
+                                   (condition["condition"], i, condition["condition"], i,
+                                    condition["condition"], i, condition["condition"], i))
 
                     iDs = cursor.fetchall()
 
@@ -298,7 +296,7 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
     for result in measurements1:
         if result in measurements2:
             if result not in shared:
-                shared.append((result, measurements1[result], result, measurements2[result]))
+                shared.append((result, measurements1[result], measurements2[result]))
 
     return shared
 
