@@ -57,24 +57,24 @@ def csvInput(csv, cursor):
                 else:
                     continue
                 if not prevInsert:
-                    cursor.execute("INSERT INTO Experiment_%s"
-                                   " (Sequence, Condition_Name, Condition_Value) VALUES %s"
-                                   "(%s, %s, %s", (domain, experiment[0], c[0], value))
+                    cursor.execute("""INSERT INTO Experiment_%s""" + domain +
+                                   """(Sequence, Condition_Name, Condition_Value) VALUES %s"
+                                   "(%s, %s, %s)""", (experiment[0], c[0], value))
                     initCond = c[0]
                     initValue = value
                     prevInsert = True
                 else:
                     cursor.execute("""SELECT DISTINCT Experiment_ID"
-                                   FROM Experiment_%s
-                                   WHERE Sequence = %s
+                                   FROM Experiment_%s""" + domain +
+                                   """WHERE Sequence = %s
                                    AND Condition_Name = %s
                                    AND Condition_Value = %s""",
-                                   (domain, experiment[0], initCond, initValue))
+                                   (experiment[0], initCond, initValue))
                     expIDs = cursor.fetchall()
                     for result in expIDs:
                         iD = result[0]
                     cursor.execute("""INSERT INTO Experiment_%s VALUES (%s, %s, %s)""",
-                                   (domain, experiment[0], c[0], value))
+                                   (experiment[0], c[0], value))
         if iD == -1:
             continue
         for row in df.index.values:
@@ -106,5 +106,5 @@ def csvInput(csv, cursor):
                     rValue = str(cell)
                 else:
                     continue
-                cursor.execute("""INSERT INTO Measurement_%s" + rDomain +
-                               " VALUES (%s, %s, %s)""", (rDomain, iD, r[0], rValue))
+                cursor.execute("""INSERT INTO Measurement_""" + rDomain +
+                               """ VALUES (%s, %s, %s)""", (iD, r[0], rValue))
