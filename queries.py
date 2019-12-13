@@ -28,6 +28,4 @@ def getAllConditions(cursor):
                    (SELECT Condition_Name, Condition_Value FROM Experiment_Boolean)""")
 
     conditions = cursor.fetchall()
-    for condition in conditions:
-        results[condition[0]] = condition[1]
-    return results
+    return conditions
