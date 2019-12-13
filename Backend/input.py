@@ -67,7 +67,6 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
 
         if d is False:
             return False
-        
 
         initCond = 0
         initValue = 0
@@ -108,19 +107,20 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
             except (errors.Error, errors.Warning) as error:
                 print(error)
                 return False
-    for measurement in experiment.measurements:
-        cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
-        domain = cursor.fetchone()
-        if domain is False:
-            continue
-        print(domain)
-        
-        try:
-            cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
-                            (experiment.iD, measurement, experiment.measurements[measurement]))
-        except (errors.Error, errors.Warning) as error:
-            print(error)
-            return False
+    print(experiment.measurements, "MEASUREMENTS")
+    
+    cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
+    domain = cursor.fetchone()
+    if domain is False:
+        return False
+    print(domain)
+    
+    try:
+        cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
+                        (experiment.iD, measurement, value))
+    except (errors.Error, errors.Warning) as error:
+        print(error)
+        return False
     return True
 
 
