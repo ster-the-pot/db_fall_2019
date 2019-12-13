@@ -56,7 +56,6 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     experiment = Experiment()
     experiment.sequence = sequence
     experiment.measurements[measurement] = value
-    print(conditions)
     for condition in conditions:
         experiment.conditions[condition["condition"]] = condition["value"]
 
@@ -118,53 +117,56 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     return True
 
 
-def experimentInfo(sequence, condition, value, cursor):
+def experimentInfo(sequence, conditions, value, cursor):
     answer = []
-    cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
-    domain = cursor.fetchall()
-    if domain is False:
-        return
-    cursor.execute("""SELECT Experiment_ID 
+    experiment = Experiment()
+    experiment.sequence = sequence
+    experiment.measurements[measurement] = value
+    for condition in conditions:
+        experiment.conditions[condition["condition"]] = condition["value"]
+    for condition in experiment.conditions:
+        cursor.execute("""SELECT Domain FROM Condition_Domains WHERE Condition_Name = %s""", (condition,))
+        domain = cursor.fetchall()
+        if domain is False:
+            return
+        cursor.execute("""SELECT DISTINCT Experiment_ID 
                    FROM Experiment_""" + domain[0] + """ 
                    WHERE Condition_Name = %s 
                    AND Condition_Value = %s 
                    AND Sequence = %s
                    ORDER BY Experiment_ID DESC""", (domain[0], condition, value, sequence))
 
-    expIDs = cursor.fetchall()
+        expIDs = cursor.fetchall()
 
-    if expIDs is False:
-        return
-    for iD in expIDs:
-        ex = ExperimentReturn()
-        ex.sequence = sequence
-        ex.id = iD
-        ex.conditions[str(condition)] = value
+        if expIDs is False:
+            return
+        for iD in expIDs:
+            experiment.sequence = sequence
+            experiment.iD = iD
 
-        # cursor.execute("""SELECT Sequence FROM Experiment_%s
-        #              WHERE Experiment_ID = %s""", (domain[0], iD))
+            # cursor.execute("""SELECT Sequence FROM Experiment_%s
+            #              WHERE Experiment_ID = %s""", (domain[0], iD))
 
-        # sequence = cursor.fetchone()
+            # sequence = cursor.fetchone()
 
-        # ex.sequence = sequence[0]
+            # ex.sequence = sequence[0]
 
-        cursor.execute("""(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) UNION 
+            cursor.execute("""(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) UNION 
                        "(SELECT DISTINCT * FROM Measurement_Float WHERE Experiment_ID = %s) UNION 
                        "(SELECT DISTINCT * FROM Measurement_Boolean WHERE Experiment_ID = %s) UNION 
                        "(SELECT DISTINCT * FROM Measurement_Int WHERE Experiment_ID = %s) 
                        "ORDER BY Experiment_ID DESC""", (iD, iD, iD, iD))
 
-        exps = cursor.fetchall()
-        for exp in exps:
-            ex.measurements[exp[1]] = exp[2]
-
-        answer.append(ex)
+            exps = cursor.fetchall()
+            for exp in exps:
+                ex.measurements[exp[1]] = exp[2]
+                answer.append((str(exp[1]), str(exp[2])))
 
     return answer
 
 
-def side_by_side(exp1, exp2, cursor):
-    shared = {}
+def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
+    shared = []
     cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
                    "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %S) UNION 
                    "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
