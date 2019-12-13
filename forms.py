@@ -36,6 +36,9 @@ class ConditionForm(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
     value= value  = StringField('', [validators.Length(min=1,max=50), validateName])
 
+class ConditionFormNoVal(Form):
+    condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
+
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
@@ -99,21 +102,38 @@ class QueryMeasurementForm(Form):
 
 
 class DualQueryMeasurementForm(Form):
-    seq = SelectField(label="Select Sequence",choices=[("Seq1","Seq1"),("Seq2","Seq2")])
+    # retrieval of all sequence values
+    choices = queries.getAllSequenceNames(queries.cursor)
+
+    seq1 = SelectField(label="Select Sequence1",choices=choices)
+    seq2 = SelectField(label="Select Sequence2",choices=choices)
+    cond1 = FieldList(FormField(ConditionFormNoVal))
+    cond2 = FieldList(FormField(ConditionFormNoVal))
+
+    def addCondition(self, index):
+        if(index == 1):
+            self.cond1.append_entry()
+        else:
+            self.cond2.append_entry()
+        
     
-    cond = FieldList(FormField(ConditionForm))
 
-    def addCondition(self):
-        self.cond.append_entry()
-
-    def getConditions(self):
+    def getConditions(self,index):
         conditionList = []
-        while(len(self.cond) is not 0):
-            conditionList.append(self.cond.pop_entry().data)
-            #conditionList.append({"condition":rawCond.})
-        return conditionList
+        if(index == 1):
+            while(len(self.cond1) is not 0):
+                conditionList.append(self.cond1.pop_entry().data)
+            return conditionList
+        else:
+            while(len(self.cond2) is not 0):
+                conditionList.append(self.cond2.pop_entry().data)
+            return conditionList
 
-    def getSequence(self):
-        return self.seq.data
+
+    def getSequence(self, index):
+        if(index ==1):
+            return self.seq1.data
+        else:
+            return self.seq2.data
 
 
