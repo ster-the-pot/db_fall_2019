@@ -70,7 +70,7 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
 
         initCond = 0
         initValue = 0
-        
+
         if not prevInsert:
             try:
                 cursor.execute(
@@ -108,13 +108,13 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 print(error)
                 return False
     print(experiment.measurements, "MEASUREMENTS")
-    
+
     cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
     domain = cursor.fetchone()
     if domain is False:
         return False
     print(domain)
-    
+
     try:
         cursor.execute("""INSERT INTO Measurements_""" + d[0] + """ Values (%s, %s, %s)""",
                         (experiment.iD, measurement, value))
@@ -175,36 +175,130 @@ def experimentInfo(sequence, conditions, cursor):
 
 def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
     shared = []
-    cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %S) UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s)""",
-                   (exp1.iD, exp1.iD, exp1.iD, exp1.iD))
+    measurements1 = {}
+    measurements2 = {}
+    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Sequence = %s) UNION 
+                   (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Sequence = %s) UNION 
+                   (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Sequence = %s) UNION 
+                   (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s)""",
+                   (sequence1, sequence1, sequence1, sequence1))
 
-    results1 = cursor.fetchall()
+    ret = cursor.fetchall()
 
-    for result in results1:
-        exp1.measurements[result[0]] = result[1]
+    checks = []
+    prevCheck = False
+    for iD in ret:
+        for condition in conditions1:
+            if not prevCheck:
+                cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
+                                Condition_Value = %s) UNION 
+                                (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
+                                AND Condition_Value = %s) UNION 
+                                (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
+                                AND Condition_Value = %s) UNION 
+                                (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
+                                AND Condition_Value = %s)""",
+                               (condition["condition"], condition["value"], iD, condition["condition"], condition["value"], iD,
+                                condition["condition"], condition["value"], iD, condition["condition"], condition["value"], iD))
+                iDs = cursor.fetchall()
 
-    cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %s") UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
-                   "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s""",
-                   (exp2.iD, exp2.iD, exp2.iD, exp2.iD))
+                for i in iDs:
+                    checks.append(i[0])
+                prevCheck = True
+            else:
+                temp = []
+                for i in check:
+                    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
+                                    Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
+                                    AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
+                                    AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
+                                    AND Condition_Value = %s AND Experiment_ID = %s)""",
+                                    (condition["condition"], condition["value"], i, condition["condition"], condition["value"], i,
+                                    condition["condition"], condition["value"], i, condition["condition"], condition["value"], i))
 
-    results2 = cursor.fetchall()
+                    iDs = cursor.fetchall()
 
-    for result in results2:
-        exp2.measurements[result[0]] = result[1]
+                    if not iDs:
+                        checks.remove(i)
 
-    for result in exp1.measurements:
-        if result in exp2.measurements:
+    for c in checks:
+        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
+                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %s") UNION 
+                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
+                       "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s""",
+                        (c, c, c, c))
+        results1 = cursor.fetchall()
+
+        for result in results1:
+            measurements1[result[0]] = result[1]
+
+    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Sequence = %s) UNION 
+                       (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Sequence = %s) UNION 
+                       (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Sequence = %s) UNION 
+                       (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s)""",
+                   (sequence2, sequence2, sequence2, sequence2))
+
+    ret = cursor.fetchall()
+
+    checks = []
+    prevCheck = False
+    for iD in ret:
+        for condition in conditions2:
+            if not prevCheck:
+                cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
+                                    Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
+                                    AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
+                                    AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
+                                    AND Condition_Value = %s)""",
+                               (condition["condition"], condition["value"], condition["condition"], condition["value"],
+                                condition["condition"], condition["value"], condition["condition"], condition["value"]))
+                iDs = cursor.fetchall()
+
+                for i in iDs:
+                    checks.append(i[0])
+                prevCheck = True
+            else:
+                temp = []
+                for i in checks:
+                    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
+                                        Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
+                                        AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
+                                        AND Condition_Value = %s AND Experiment_ID = %s) UNION 
+                                        (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
+                                        AND Condition_Value = %s AND Experiment_ID = %s)""",
+                                   (condition["condition"], condition["value"], i, condition["condition"],
+                                    condition["value"], i,
+                                    condition["condition"], condition["value"], i, condition["condition"],
+                                    condition["value"], i))
+
+                    iDs = cursor.fetchall()
+
+                    if not iDs:
+                        checks.remove(i)
+
+    for c in checks:
+        cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurement_Int Where Experiment_ID = %s) UNION 
+                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Float Where Experiment_ID = %s") UNION 
+                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_Boolean Where Experiment_ID = %s) UNION 
+                           "(SELECT Measurement_Name, Measurement_Value FROM Measurement_String Where Experiment_ID = %s""",
+                       (c, c, c, c))
+        results2 = cursor.fetchall()
+
+        for result in results2:
+            measurements2[result[0]] = result[1]
+
+    for result in measurements1:
+        if result in measurements2:
             if result not in shared:
-                shared[result] = exp1.measurements[result]
-    for result in exp2.measurements:
-        if result in exp1.measurements:
-            if result not in shared:
-                shared[result] = exp2.measurements[result]
+                shared.append((result, measurements1[result], result, measurements2[result]))
 
     return shared
 
