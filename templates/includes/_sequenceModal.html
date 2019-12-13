@@ -2,11 +2,9 @@
     {% from "includes/_formhelpers.html" import render_field %}
     <form method="POST" action="" id="sequenceForm">
 
-        <select name="sequence" id="sequenceForm" placeholder="Select Sequence" class="form-control" >
-            {% for subfield in formSeq.sequence %}
-            <option class="dropdown-item">{{render_field(subfield.label)}}</option>
-            {% endfor %}
-        </select>
+        <div class="form-group">
+            {{render_field(formSeq.sequence,class_="form-control")}}
+        </div>
 
         <div class="form-group">
             {{render_field(formSeq.description,class_="form-control")}}

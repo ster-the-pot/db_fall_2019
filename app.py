@@ -103,7 +103,7 @@ def inputPage():
 
                 #print(request.form)
                 #print(formMVal.validate())
-        
+                print(formSeq.errors)
 
                 if(request.form["btn"] == "condition" and formCond.validate()):
                         print("Do Condition Insert")
@@ -120,6 +120,12 @@ def inputPage():
                         print("Do measure Insert")
                         print(formMeasure.measurement.data)
                         print(formMeasure.domain.data)
+                        if(input.measurementAdd(formMeasure.measurement.data,formMeasure.domain.data,cursor)):
+                                flash("Insertion Successful","success")
+                                mydb.commit()
+                        else:
+                                flash("Insertion Failed", "failed")
+                        
 
                 elif(request.form["btn"] == "sequence" and formSeq.validate()):
                         print("Do sequence modify")
