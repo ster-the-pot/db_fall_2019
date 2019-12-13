@@ -198,8 +198,8 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                                 AND Experiment_ID = %s) UNION 
                                 (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
                                 AND Experiment_ID = %s)""",
-                               (condition["condition"], iD, condition["condition"], iD,
-                                condition["condition"], iD, condition["condition"], iD))
+                               (condition["condition"], iD[0], condition["condition"], iD[0],
+                                condition["condition"], iD[0], condition["condition"], iD[0]))
                 iDs = cursor.fetchall()
 
                 for i in iDs:
@@ -256,8 +256,8 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
                                     AND Experiment_ID = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
                                     AND Experiment_ID = %s)""",
-                               (condition["condition"], iD, condition["condition"], iD,
-                                condition["condition"], iD, condition["condition"], iD))
+                               (condition["condition"], iD[0], condition["condition"], iD[0],
+                                condition["condition"], iD[0], condition["condition"], iD[0]))
                 iDs = cursor.fetchall()
 
                 for i in iDs:
