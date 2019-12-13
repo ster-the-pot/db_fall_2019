@@ -117,11 +117,10 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
     return True
 
 
-def experimentInfo(sequence, conditions, value, cursor):
+def experimentInfo(sequence, conditions, cursor):
     answer = []
     experiment = Experiment()
     experiment.sequence = sequence
-    experiment.measurements[measurement] = value
     for condition in conditions:
         experiment.conditions[condition["condition"]] = condition["value"]
     for condition in experiment.conditions:
