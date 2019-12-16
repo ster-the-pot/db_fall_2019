@@ -26,6 +26,7 @@ def csvInput(csv, cursor):
         iD = -1
         initCond = 0
         initValue = 0
+        count = len(condList)
         for condition in condList:
             expr = condition.split('_')
             cursor.execute("""
@@ -56,39 +57,47 @@ def csvInput(csv, cursor):
                 else:
                     continue
                 if not prevInsert:
+                    cursor.execute("""SELECT COUNT (DISTINCT Experiment_ID) FROM (
+                                    SELECT DISTINCT Experiment_ID FROM Experiment_Int)
+                                    UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float)
+                                    UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean)
+                                    UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String))""")
+                    iD = cursor.fetchone()[0] + 1
                     cursor.execute("""INSERT INTO Experiment_""" + domain +
-                                   """ (Sequence, Condition_Name, Condition_Value) VALUES 
-                                   (%s, %s, %s)""", (experiment[0], c[0], value))
+                                   """ VALUES (%s, %s, %s, %s)""", (iD, experiment[0], c[0], value, count))
                     initCond = c[0]
                     initValue = value
                     prevInsert = True
                 else:
-                    cursor.execute("""SELECT DISTINCT Experiment_ID
-                                   FROM Experiment_""" + domain +
-                                   """ WHERE Sequence = %s
-                                   AND Condition_Name = %s
-                                   AND Condition_Value = %s
-                                   ORDER BY Experiment_ID ASC""",
-                                   (experiment[0], initCond, initValue))
-                    expIDs = cursor.fetchall()
-                    for result in expIDs:
-                        iD = result[0]
+                    # cursor.execute("""SELECT DISTINCT Experiment_ID
+                    #               FROM Experiment_""" + domain +
+                    #               """ WHERE Sequence = %s
+                    #               AND Condition_Name = %s
+                    #               AND Condition_Value = %s
+                    #               ORDER BY Experiment_ID ASC""",
+                    #              (experiment[0], initCond, initValue))
+                    # expIDs = cursor.fetchall()
+                    # for result in expIDs:
+                    #    iD = result[0]
                     try:
-                        cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s)""",
-                                       (experiment[0], c[0], value))
+                        cursor.execute("""INSERT INTO Experiment_""" + domain + """ VALUES (%s, %s, %s, %s, %s)""",
+                                       (iD, experiment[0], c[0], value, count))
                     except (mysql.Error, mysql.Warning) as error:
                         print(error)
         if iD == -1:
             continue
-        for row in df.index.values:
+        for row in df.index:
             cursor.execute("""SELECT Measurement_Name, Domain 
                            FROM Measurement_Domains 
-                           WHERE Measurement = %s""", (row.str,))
+                           WHERE Measurement = %s""", (row,))
             measRS = cursor.fetchall()
             if measRS is False:
                 # Output measurement missing error
                 continue
-            cell = df.loc[row.str, column.str]
+            cell = df.loc[row, column]
             for r in measRS:
                 rDomain = r[1]
                 rValue = cell
