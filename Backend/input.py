@@ -231,7 +231,8 @@ def experimentInfo(sequence, conditions, cursor):
             for exp in exps:
                 
                 experiment.measurements[exp[1]] = exp[2]
-                answer.append((str(exp[1]), str(exp[2])))
+                if (str(exp[1]),str(exp[2])) not in answer:
+                    answer.append((str(exp[1]), str(exp[2])))
     
     return answer
 
