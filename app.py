@@ -74,7 +74,7 @@ def sideBySidePage():
                         
                         conditions1 =formMVal.getConditions(1)
                         conditions2=formMVal.getConditions(2)
-                        
+
                         print(conditions1, "CONDITION1")
                         print(conditions2, "CONDITION2")
 
@@ -219,4 +219,4 @@ def aboutPage():
         return render_template("about.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=80)
