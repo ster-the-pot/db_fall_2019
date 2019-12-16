@@ -86,12 +86,11 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                                     AND Condition_Name = %s AND Condition_Value = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_String WHERE Experiment_ID = %s
                                     AND Condition_Name = %s AND Condition_Value = %s)""",
-                               (iD[0], condition,  experiment.conditions[condition],
-                                iD[0], condition,  experiment.conditions[condition],
-                                iD[0], condition,  experiment.conditions[condition],
-                                iD[0], condition,  experiment.conditions[condition]))
+                               (iD[0], condition, experiment.conditions[condition],
+                                iD[0], condition, experiment.conditions[condition],
+                                iD[0], condition, experiment.conditions[condition],
+                                iD[0], condition, experiment.conditions[condition]))
                 iDs = cursor.fetchall()
-                
 
                 for i in iDs:
                     checks.append(i[0])
@@ -176,7 +175,6 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                 experiment.measurements[measurement] = 1
             elif experiment.measurements[measurement].lower() in ['f', '0']:
                 experiment.measurements[measurement] = 0
-
 
         try:
             cursor.execute("""INSERT INTO Measurements_""" + domain[0] + """ Values (%s, %s, %s)""",
@@ -400,6 +398,7 @@ def multipleExp(sequences, conditions, measurements, cursor):
     answer = []
     for sequence in sequences:
         entry = ExperimentReturn()
+        entry.sequence = sequence
         cursor.execute("""(SELECT Experiment_ID FROM Experiment_Int WHERE Sequence = %s) UNION 
                        (SELECT Experiment_ID FROM Experiment_Float WHERE Sequence = %s) UNION 
                        (SELECT Experiment_ID FROM Experiment_Boolean WHERE Sequence = %s) UNION 
@@ -412,16 +411,20 @@ def multipleExp(sequences, conditions, measurements, cursor):
 
         valid = []
         for iD in ids:
+            entry.iD = iD[0]
             for condition in conditions:
-                cursor.execute("""(SELECT * FROM Experiment_Int WHERE Condition_Name = %s 
-                               AND Experiment_ID = %s) UNION 
-                               (SELECT * FROM Experiment_String WHERE Condition_Name = %s 
-                               AND Experiment_ID = %s) UNION 
-                               (SELECT * FROM Experiment_Float WHERE Condition_Name = %s 
-                               AND Experiment_ID = %s) UNION 
-                               (SELECT * FROM Experiment_Boolean WHERE Condition_Name = %s 
-                               AND Experiment_ID = %s)""",
-                               (condition, iD, condition, iD, condition, iD, condition, iD))
+                cursor.execute("""(SELECT * FROM Experiment_Int WHERE Experiment_ID = %s 
+                               AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                               (SELECT * FROM Experiment_String WHERE Experiment_ID = %s 
+                               AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                               (SELECT * FROM Experiment_Float WHERE Experiment_ID = %s 
+                               AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                               (SELECT * FROM Experiment_Boolean WHERE Experiment_ID = %s 
+                               AND Condition_Name = %s AND Condition_Value = %s)""",
+                               (iD, condition["condition"], condition["value"],
+                                iD, condition["condition"], condition["value"],
+                                iD, condition["condition"], condition["value"],
+                                iD, condition["condition"], condition["value"]))
 
                 exps = cursor.fetchall()
 
@@ -429,28 +432,26 @@ def multipleExp(sequences, conditions, measurements, cursor):
                     continue
 
                 for exp in exps:
-                    entry.iD = exp[0]
-                    entry.sequence = exp[1]
                     entry.conditions[exp[2]] = exp[3]
                     for measurement in measurements:
                         cursor.execute("""(SELECT Measurement_Name, Measurement_Value FROM Measurements_Int 
-                                       WHERE Measurement_Name = %s 
-                                       AND Experiment_ID = %s) UNION 
+                                       WHERE Experiment_ID = %s and Measurement_Name = %s) UNION 
                                        (SELECT Measurement_Name, Measurement_Value FROM Measurements_Float 
-                                       WHERE Measurement_Name = %s 
-                                       AND Experiment_ID = %s) UNION 
+                                       WHERE Experiment_ID = %s and Measurement_Name = %s) UNION 
                                        (SELECT Measurement_Name, Measurement_Value FROM Measurements_Boolean 
-                                       WHERE Measurement_Name = %s 
-                                       AND Experiment_ID = %s) UNION 
+                                       WHERE Experiment_ID = %s and Measurement_Name = %s) UNION 
                                        (SELECT Measurement_Name, Measurement_Value FROM Measurements_String 
-                                       WHERE Measurement_Name = %s 
-                                       AND Experiment_ID = %s)""",
-                                       (measurement, iD, measurement, iD, measurement, iD, measurement, iD))
+                                       WHERE Experiment_ID = %s and Measurement_Name = %s)""",
+                                       (iD, measurement["measure"],
+                                        iD, measurement["measure"],
+                                        iD, measurement["measure"],
+                                        iD, measurement["measure"]))
 
                         measures = cursor.fetchall()
                         if measures is False:
                             continue
                         for measure in measures:
                             entry.measurements[measure[0]] = measure[1]
-        answer.append(entry)
+            if entry.conditions:
+                answer.append(entry)
     return answer
