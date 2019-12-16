@@ -105,6 +105,9 @@ def inputPage():
         formMVal = forms.InsertMeasurementForm(request.form)
         formFile = forms.CSVFileUpload(request.form)
 
+        formMVal.updateConditionsList()
+        formMVal.updateMeasurementList()
+        formMVal.updateSequenceList()
 
         
         #seqList=queries.getAllSequences()
