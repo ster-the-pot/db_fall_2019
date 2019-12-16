@@ -67,9 +67,15 @@ def sideBySidePage():
                         measurements = input.side_by_side(formMVal.getSequence(1),conditions1,formMVal.getSequence(2),conditions2,cursor)
                         print(measurements)
                         mydb.commit()
+                        experiments = [
+                                        {"sequence":formMVal.getSequence(1),
+                                        "conditionList":conditions1
+                                        },{"sequence":formMVal.getSequence(2),
+                                        "conditionList":conditions2
+                                        }
+                                ]
                         
-                        
-                        return render_template('side.html',formMVal = formMVal, measurements=measurements) 
+                        return render_template('side.html',formMVal = formMVal, measurements=measurements, experiments=experiments) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition(1)
@@ -151,10 +157,10 @@ def inputPage():
                         if(input.experimentAdd(sequence,conditionList,measurementList,cursor)):
                                  flash("Insertion Successful","success")
                                  mydb.commit()
-                         else:
+                        else:
                                  flash("Insertion Failed", "failed")
 
-                        input.experimentAdd()
+                        #input.experimentAdd()
                         
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
                         

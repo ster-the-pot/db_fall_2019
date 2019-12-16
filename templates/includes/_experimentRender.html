@@ -1,0 +1,13 @@
+<div class="col-6 align-self-start" style="width: 18rem;">
+        <h5 style="text-align:center; margin-top:10px" class="card-title">{{experiment["sequence"]}}</h5>
+        <p class="card-text">
+            <ul class="list-group">
+                {%for condition in experiment["conditionList"]%}
+                <li class="list-group-item">
+                    <b>{{condition["condition"]}}:</b> {{condition["value"]}}
+                </li>
+                {%endfor%}
+            </ul>
+        </p>
+
+</div>

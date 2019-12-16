@@ -24,32 +24,22 @@
             class=" row my-auto btn btn-success btn-lg">Compare Experiments</button>
     </div>
 </div>
-<div class="row card-group">
-    <div class="card col 6" style="width: 18rem;">
-        <div class="card-body ">
-            {%if experiment1%}
-            <h5 class="card-title">{{experiment1.sequence}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{experiment1.filename}}</h6>
-            <p class="card-text">{{experiment1.description}}</p>
-            {%else%}
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
+<div class="row card-group" style="height:50px">
+    <h2 style=" text-align:center"class="col-6 card">Experiment 1</h2>
+    <h2 style=" text-align:center"class="col-6 card">Experiment 2</h2>
+</div>
+<div class="row card-group" >
+    {%if experiments %}
+        {%with experiment=experiments[0]%}
+            {%include "/includes/_experimentRender.html"%}
+        {%endwith%}
+        {%with experiment=experiments[1]%}
+            {%include "/includes/_experimentRender.html"%}
+        {%endwith%}
+    {%else%}
+    
 
-            {%endif%}
-        </div>
-    </div>
-    <div class="card col 6" style="width: 18rem;">
-        <div class="card-body ">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-    </div>
+    {%endif%}
 </div>
 
 

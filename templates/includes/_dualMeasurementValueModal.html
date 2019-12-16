@@ -25,6 +25,8 @@
                 {% endfor %}
 
             </select>
+
+            {{render_field(i.value,class_="form-control col-6")}}
         </div>
 
         {%endfor%}
@@ -49,6 +51,8 @@
                 {% for subfield in i.condition %}
                 <option name="{{subfield}}" class="dropdown-item">{{render_field(subfield.label)}}</option>
                 {% endfor %}
+
+                 {{render_field(i.value,class_="form-control col-6")}}
 
             </select>
         </div>

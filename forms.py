@@ -119,8 +119,8 @@ class DualQueryMeasurementForm(Form):
 
     seq1 = SelectField(label="Select Sequence1",choices=choices)
     seq2 = SelectField(label="Select Sequence2",choices=choices)
-    cond1 = FieldList(FormField(ConditionFormNoVal))
-    cond2 = FieldList(FormField(ConditionFormNoVal))
+    cond1 = FieldList(FormField(ConditionForm))
+    cond2 = FieldList(FormField(ConditionForm))
 
     def addCondition(self, index):
         if(index == 1):
