@@ -1,6 +1,15 @@
 <div class="col-6 align-self-start" style="width: 18rem;">
-        <h5 style="text-align:center; margin-top:10px" class="card-title">{{experiment["sequence"]}}</h5>
+
+        <h5 style="margin-top:10px"class="list-group-item"><b> Sequence: </b> {{experiment["sequence"]}}</h5>
+        {%if experiment["description"] !=  '' %}
+        <h6  class="list-group-item"><b> Description:</b> {{experiment["description"]}}</h6>
+        {%endif%}
+        {%if experiment["filename"] != '' %}
+
+        <h6 class="list-group-item"><b>Filename</b> {{experiment["filename"]}}</h6>
+        {%endif%}
         <p class="card-text">
+            <h5 class="list-group-item"><b>Conditions:</b></h5>
             <ul class="list-group">
                 {%for condition in experiment["conditionList"]%}
                 <li class="list-group-item">

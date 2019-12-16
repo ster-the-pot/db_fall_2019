@@ -21,6 +21,10 @@ def getAllSequenceNames(cursor):
         results.append((str(sequence[0]), str(sequence[0])))
     return results
 
+def getSequenceDetails(sequence):
+    cursor.execute("SELECT * FROM Sequences WHERE Sequence=%s",(sequence,))
+    return cursor.fetchone()
+
 
 def getAllConditions(cursor):
     cursor.execute("""(SELECT Condition_Name, Condition_Value FROM Experiment_Int) UNION 

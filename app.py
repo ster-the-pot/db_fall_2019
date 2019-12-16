@@ -71,13 +71,20 @@ def sideBySidePage():
                         measurements = input.side_by_side(formMVal.getSequence(1),conditions1,formMVal.getSequence(2),conditions2,cursor)
                         print(measurements)
                         mydb.commit()
+                        seq1D = queries.getSequenceDetails(formMVal.getSequence(1))
+                        seq2D = queries.getSequenceDetails(formMVal.getSequence(2))
                         experiments = [
                                         {"sequence":formMVal.getSequence(1),
-                                        "conditionList":conditions1
+                                        "conditionList":conditions1,
+                                        "filename":seq1D[2],
+                                        "description":seq1D[1]
                                         },{"sequence":formMVal.getSequence(2),
-                                        "conditionList":conditions2
+                                        "conditionList":conditions2,
+                                        "filename":seq2D[2],
+                                        "description":seq2D[1]
                                         }
                                 ]
+                        
                         
                         return render_template('side.html',formMVal = formMVal, measurements=measurements, experiments=experiments) 
                 elif(request.form["btn"] == "addCond"):
