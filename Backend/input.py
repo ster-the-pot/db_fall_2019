@@ -52,7 +52,8 @@ def sequenceAdd(name, description, cursor, file_name=None):
     return True
 
 
-def experimentAdd(sequence, conditions, measurements, value, cursor):
+def experimentAdd(sequence, conditions, measurements, cursor):
+    checks = []
     experiment = ExperimentReturn()
     count = len(conditions)
     experiment.sequence = sequence
@@ -138,8 +139,6 @@ def experimentAdd(sequence, conditions, measurements, value, cursor):
         if d is False:
             return False
 
-        initCond = 0
-        initValue = 0
 
         if not prevInsert:
             try:
@@ -149,8 +148,6 @@ def experimentAdd(sequence, conditions, measurements, value, cursor):
 
                 prevInsert = True
                 experiment.iD = iD
-                initCond = condition
-                initValue = experiment.conditions[condition]
 
             except (errors.Error, errors.Warning) as error:
                 print(error)
