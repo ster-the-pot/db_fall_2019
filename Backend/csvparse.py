@@ -64,7 +64,7 @@ def csvInput(csv, cursor):
                                     UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean)
                                     UNION 
-                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String))""")
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String)) as ID_Count""")
                     iD = cursor.fetchone()[0] + 1
                     cursor.execute("""INSERT INTO Experiment_""" + domain +
                                    """ VALUES (%s, %s, %s, %s)""", (iD, experiment[0], c[0], value, count))
