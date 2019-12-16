@@ -53,7 +53,6 @@ def sequenceAdd(name, description, cursor, file_name=None):
 
 
 def experimentAdd(sequence, conditions, measurements, cursor):
-    checks = []
     experiment = ExperimentReturn()
     count = len(conditions)
     experiment.sequence = sequence
@@ -140,6 +139,11 @@ def experimentAdd(sequence, conditions, measurements, cursor):
 
         if d is False:
             return False
+        if d[0] == "Boolean":
+            if experiment.conditions[condition].lower() in ['t', '1']:
+                experiment.conditions[condition] = 1
+            elif experiment.conditions[condition].lower() in ['f', '0']:
+                experiment.conditions[condition] = 0
 
         if not prevInsert:
             try:
@@ -161,14 +165,18 @@ def experimentAdd(sequence, conditions, measurements, cursor):
             except (errors.Error, errors.Warning) as error:
                 print(error)
                 return False
-    print(experiment.measurements, "MEASUREMENTS")
 
     for measurement in experiment.measurements:
         cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
         domain = cursor.fetchone()
         if not domain:
             return False
-        print(domain)
+        if domain[0] == "Boolean":
+            if experiment.measurements[measurement].lower() in ['t', '1']:
+                experiment.measurements[measurement] = 1
+            elif experiment.measurements[measurement].lower() in ['f', '0']:
+                experiment.measurements[measurement] = 0
+
 
         try:
             cursor.execute("""INSERT INTO Measurements_""" + domain[0] + """ Values (%s, %s, %s)""",
