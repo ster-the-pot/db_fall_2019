@@ -16,35 +16,19 @@
 </script>
 {%endif%}
 
-<div class="row card-group">
-    <div class="card col-4" style="width: 18rem;">
-        <div class="card-body ">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-    </div>
-
-    <div class="card">
-        <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green"
-            class=" my-auto btn btn-success btn-lg">Query Experiment Measurements</button>
-    </div>
-
-    <div class="card col-4" style="width: 18rem;">
-        <div class="card-body ">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-    </div>
+<div class="row">
+    <button type="button" data-toggle="modal" data-target="#mValModal" style="background-color:green"
+        class="btn btn-success btn-lg btn-block">Query Experiment Measurements</button>
 </div>
 
+{%if experiment%}
+<h2 style=" margin-top:0px;text-align:center;background-color:#212529; color:white">Experiment Information</h2>
+<div style="text-align:center;">
+    
+    {%include "includes/_experimentRender.html"%}
+</div>
+{%endif%}
+    
 {% include 'includes/_measureTable.html'%}
 
 <!--Mval insert Modal -->

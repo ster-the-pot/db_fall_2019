@@ -38,9 +38,16 @@ def experimentPage():
                         sequence = formMVal.sequence.data
                         #################################
                         measurements = input.experimentInfo(sequence,conditionList,cursor)
-                        print(measurements)
+                        seqInfo = queries.getSequenceDetails(sequence)
+                        experiment = {
+                                "sequence":sequence,
+                                "conditionList":conditionList,
+                                "filename":seqInfo[2],
+                                "description":seqInfo[1]
+                        }
 
-                        return render_template('experiment.html',formMVal=formMVal, measurements=measurements) 
+
+                        return render_template('experiment.html',formMVal=formMVal, measurements=measurements, experiment = experiment) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition()
@@ -86,7 +93,7 @@ def sideBySidePage():
                                 ]
                         
                         
-                        return render_template('side.html',formMVal = formMVal, measurements=measurements, experiments=experiments) 
+                        return render_template('side.html',formMVal = formMVal, measurements=measurements, experiments=experiments, cardRender=1) 
                 elif(request.form["btn"] == "addCond"):
                         print("add conditions")
                         formMVal.addCondition(1)
