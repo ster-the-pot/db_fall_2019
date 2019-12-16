@@ -162,6 +162,8 @@ class DualQueryMeasurementForm(Form):
             self.cond1.append_entry()
         else:
             self.cond2.append_entry()
+        self.updateConditionsList()
+            
         
     
 

@@ -57,7 +57,7 @@ def csvInput(csv, cursor):
                 else:
                     continue
                 if not prevInsert:
-                    cursor.execute("""SELECT COUNT (DISTINCT Experiment_ID) FROM (
+                    cursor.execute("""SELECT COUNT(DISTINCT Experiment_ID) FROM ((
                                     SELECT DISTINCT Experiment_ID FROM Experiment_Int)
                                     UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float)
@@ -67,7 +67,8 @@ def csvInput(csv, cursor):
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_String)) as ID_Count""")
                     iD = cursor.fetchone()[0] + 1
                     cursor.execute("""INSERT INTO Experiment_""" + domain +
-                                   """ VALUES (%s, %s, %s, %s)""", (iD, experiment[0], c[0], value, count))
+                                   """ VALUES (%s, %s, %s, %s, %s)""", (iD, experiment[0], c[0], value, count))
+                    print(cursor.statement)
                     initCond = c[0]
                     initValue = value
                     prevInsert = True
@@ -92,7 +93,7 @@ def csvInput(csv, cursor):
         for row in df.index:
             cursor.execute("""SELECT Measurement_Name, Domain 
                            FROM Measurement_Domains 
-                           WHERE Measurement = %s""", (row,))
+                           WHERE Measurement_Name = %s""", (row,))
             measRS = cursor.fetchall()
             if measRS is False:
                 # Output measurement missing error
@@ -101,7 +102,9 @@ def csvInput(csv, cursor):
             for r in measRS:
                 rDomain = r[1]
                 rValue = cell
-                if rDomain.lower() == "float":
+                if rValue is np.nan:
+                    continue
+                elif rDomain.lower() == "float":
                     rDomain = "Float"
                     rValue = float(cell)
                 elif rDomain.lower() == "boolean":

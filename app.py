@@ -74,6 +74,9 @@ def sideBySidePage():
                         
                         conditions1 =formMVal.getConditions(1)
                         conditions2=formMVal.getConditions(2)
+                        
+                        print(conditions1, "CONDITION1")
+                        print(conditions2, "CONDITION2")
 
                         measurements = input.side_by_side(formMVal.getSequence(1),conditions1,formMVal.getSequence(2),conditions2,cursor)
                         print(measurements)
@@ -94,7 +97,7 @@ def sideBySidePage():
                         
                         
                         return render_template('side.html',formMVal = formMVal, measurements=measurements, experiments=experiments, cardRender=1) 
-                elif(request.form["btn"] == "addCond"):
+                elif(request.form["btn"] ==  "addCond"):
                         print("add conditions")
                         formMVal.addCondition(1)
                         return render_template('side.html',formMVal=formMVal, showMeasure="true")
