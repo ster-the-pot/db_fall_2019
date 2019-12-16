@@ -68,9 +68,6 @@ def sideBySidePage():
                         print(measurements)
                         mydb.commit()
                         
-                
-                
-        
                         
                         return render_template('side.html',formMVal = formMVal, measurements=measurements) 
                 elif(request.form["btn"] == "addCond"):
@@ -98,7 +95,6 @@ def inputPage():
         formMVal = forms.InsertMeasurementForm(request.form)
         formFile = forms.CSVFileUpload(request.form)
 
-        formMVal.measurement.choices=queries.getAllMeasurementNames(queries.cursor)
 
         
         #seqList=queries.getAllSequences()
@@ -146,20 +142,19 @@ def inputPage():
                         print("Do mval insert")
                         #resultSet of form submission
                         sequence = formMVal.sequence.data
-                        measurement = formMVal.measurement.data
-                        mVal = formMVal.value.data
-                        print(measurement)
+                        measurementList = formMVal.getMeasureList()
+                        print(measurementList)
 
 
                         conditionList = formMVal.getConditions()
 
-                        if(input.experimentAdd(sequence,conditionList,measurement,mVal,cursor)):
-                                flash("Insertion Successful","success")
-                                mydb.commit()
-                        else:
-                                flash("Insertion Failed", "failed")
+                        if(input.experimentAdd(sequence,conditionList,measurementList,cursor)):
+                                 flash("Insertion Successful","success")
+                                 mydb.commit()
+                         else:
+                                 flash("Insertion Failed", "failed")
 
-                        #input.experimentAdd()
+                        input.experimentAdd()
                         
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
                         
@@ -167,6 +162,9 @@ def inputPage():
 
                 elif(request.form["btn"] == "addCond"):
                         formMVal.addCondition()
+                        return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true",formFile=formFile)
+                elif(request.form["btn"] == "addMeasure"):
+                        formMVal.addMeasure()
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, showMeasure="true",formFile=formFile)
                 elif(request.form["btn"] == "fileUpload" and formFile.validate()):
                         print("file upload")

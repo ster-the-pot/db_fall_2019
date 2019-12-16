@@ -31,18 +31,24 @@
         
         {%endfor%}
 
-        {%if formMVal.measurement and formMVal.value%}
-        <p><b>Measurement Type</b></p>
-        <select name="measurement" id="mValForm" placeholder="Select Sequence" class="form-control">
-            {% for subfield in formMVal.measurement %}
-            <option class="dropdown-item">{{render_field(subfield.label)}}</option>
-            {% endfor %}
-        </select>
-
-        <div class="form-group">
-            {{render_field(formMVal.value,class_="form-control")}}
+        {%for i in formMVal.measureList%}
+        <div class="row no gutters" style="margin-bottom: 0px;">
+            <div class="col-6"><p><b>Measurement {{loop.index}}</b></p> </div>
+            <div class="col-6"><p><b>Value {{loop.index}}</b></p> </div>
         </div>
-        {%endif%}
+        <div class="form-group row" style="text-align:center; margin: 0px 5px 0px 5px" >
+            <select name="{{i.form.measure.name}}" id="sequenceForm" placeholder="Select Sequence" class="form-control col-6">
+
+                {% for subfield in i.measure %}
+                <option name="{{subfield}}"class="dropdown-item">{{render_field(subfield.label)}}</option>
+                {% endfor %}
+
+            </select>
+
+            {{render_field(i.measureValue,class_="form-control col-6")}}
+        </div>
+        
+        {%endfor%}
 
     </form>
 </div>

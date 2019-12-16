@@ -34,7 +34,11 @@ class ModifySequenceForm(Form):
 #used for rendering a condition input with value for said condition
 class ConditionForm(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
-    value= value  = StringField('', [validators.Length(min=1,max=50), validateName])
+    value = StringField('', [validators.Length(min=1,max=50), validateName])
+
+class MeasurementForm(Form):
+    measure = SelectField("Measurement", default="Select Measurement", choices=queries.getAllMeasurementNames(queries.cursor))
+    measureValue = StringField('', [validators.Length(min=1,max=50), validateName])
 
 class ConditionFormNoVal(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
@@ -42,11 +46,20 @@ class ConditionFormNoVal(Form):
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
-    measurement = SelectField("Measurement", default="Select Measurement", choices=queries.getAllMeasurementNames(queries.cursor))
-    value  = StringField('Measurement Value', [validators.Length(min=1,max=50), validateName])
+    condList = FieldList(FormField(ConditionForm),min_entries=1)
+    measureList = FieldList(FormField(MeasurementForm),min_entries=1)
 
-    condList = FieldList(FormField(ConditionForm))
+    def addMeasure(self):
+        self.measureList.append_entry()
 
+    # allow for multivariable measurements
+    def getMeasureList(self):
+        measureList = []
+        while(len(self.measureList) is not 0):
+            measureList.append(self.measureList.pop_entry().data)
+            #conditionList.append({"condition":rawCond.})
+        return measureList
+    #allow for multi-var conditions
     def addCondition(self):
         self.condList.append_entry()
 
@@ -87,7 +100,6 @@ class CSVFileUpload(Form):
 
 class QueryMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
-    
     condList = FieldList(FormField(ConditionForm))
 
     def addCondition(self):
