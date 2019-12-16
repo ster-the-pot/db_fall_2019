@@ -452,6 +452,6 @@ def multipleExp(sequences, conditions, measurements, cursor):
                             continue
                         for measure in measures:
                             entry.measurements[measure[0]] = measure[1]
-            if entry.conditions:
-                answer.append(entry)
+        if entry.conditions:
+            answer.append(entry)
     return answer
