@@ -127,6 +127,7 @@ class QueryMeasurementForm(Form):
 
     def addCondition(self):
         self.condList.append_entry()
+        self.updateConditionsList()
 
     def getConditions(self):
         conditionList = []
