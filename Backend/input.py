@@ -127,7 +127,7 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                     UNION 
                     (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean)
                     UNION 
-                    (SELECT DISTINCT Experiment_ID FROM Experiment_String))""")
+                    (SELECT DISTINCT Experiment_ID FROM Experiment_String)) as ID_Count""")
 
     iD = cursor.fetchone() + 1
 
