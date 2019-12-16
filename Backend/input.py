@@ -78,18 +78,18 @@ def experimentAdd(sequence, conditions, measurements, cursor):
     for iD in ret:
         for condition in experiment.conditions:
             if not prevCheck:
-                cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                    Experiment_ID = %s AND Condition_Value = %s) UNION 
-                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                    AND Experiment_ID = %s AND Condition_Value = %s) UNION 
-                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                    AND Experiment_ID = %s and Condition_Value = %s) UNION 
-                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                    AND Experiment_ID = %s and Condition_Value = %s)""",
-                               (condition, iD[0], experiment.conditions[condition],
-                                condition, iD[0], experiment.conditions[condition],
-                                condition, iD[0], experiment.conditions[condition],
-                                condition, iD[0], experiment.conditions[condition]))
+                cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s)""",
+                               (iD[0], condition,  experiment.conditions[condition],
+                                iD[0], condition,  experiment.conditions[condition],
+                                iD[0], condition,  experiment.conditions[condition],
+                                iD[0], condition,  experiment.conditions[condition]))
                 iDs = cursor.fetchall()
 
                 for i in iDs:
