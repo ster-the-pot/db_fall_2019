@@ -24,7 +24,7 @@ class AddMeasurementForm(Form):
 
 class ModifySequenceForm(Form):
     sequence = StringField("Sequence Name",[validators.Length(min=1,max=50), validators.InputRequired()])
-    description = StringField("Description",[validators.Length(min=1,max=50), validators.InputRequired()])
+    description = StringField("Description")
     filename = StringField("Sequence File")
 
 
@@ -34,7 +34,7 @@ class ModifySequenceForm(Form):
 #used for rendering a condition input with value for said condition
 class ConditionForm(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
-    value = StringField('', [validators.Length(min=1,max=50), validateName])
+    value = value = StringField('', [validators.Length(min=1,max=50), validateName])
 
 class MeasurementForm(Form):
     measure = SelectField("Measurement", default="Select Measurement", choices=queries.getAllMeasurementNames(queries.cursor))

@@ -8,6 +8,8 @@ mydb = mysql.connect(
     database="biology"
 )
 
+
+
 cursor = mydb.cursor()
 
 def getAllSequenceNames(cursor):
