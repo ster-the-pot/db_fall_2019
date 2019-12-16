@@ -206,6 +206,7 @@ def inputPage():
                                 # send file to database
                                 csvparse.csvInput(request.files["file"],cursor)
                                 mydb.commit()
+                                formMVal.updateSequenceList()
                                 flash("File Uploaded Successfully","success")
                         else:
                                 flash("File Failed to Upload. Invalid File Type!","failed")
@@ -219,4 +220,4 @@ def aboutPage():
         return render_template("about.html")
 
 if __name__ == "__main__":
-    app.run(port=80)
+    app.run(host="18.224.202.17",port=80)
