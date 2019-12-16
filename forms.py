@@ -53,8 +53,8 @@ class ConditionFormNoVal(Form):
 #overarching form for rendering experiment input
 class InsertMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
-    condList = FieldList(FormField(ConditionForm),min_entries=1)
-    measureList = FieldList(FormField(MeasurementForm),min_entries=1)
+    condList = FieldList(FormField(ConditionForm))
+    measureList = FieldList(FormField(MeasurementForm))
 
     def updateSequenceList(self):
         self.sequence.choices = queries.getAllSequenceNames(queries.cursor)
