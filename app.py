@@ -27,6 +27,8 @@ def homePage():
 @app.route("/query/experiment", methods=["GET","POST"])
 def experimentPage():
         formMVal = forms.QueryMeasurementForm(request.form)
+        formMVal.updateConditionsList()
+        formMVal.updateSequenceList()
         
         if(request.method=="POST"):
                 if(request.form["btn"] == "mVal" and formMVal.validate()):
@@ -53,6 +55,8 @@ def sideBySidePage():
         
         
         formMVal = forms.DualQueryMeasurementForm(request.form)
+        formMVal.updateConditionsList()
+        formMVal.updateSequenceList()
         
         
         if(request.method=="POST"):
@@ -118,6 +122,8 @@ def inputPage():
                         if(input.conditionAdd(formCond.conditions.data, formCond.domain.data,cursor)):
                                 flash("Insertion Successful","success")
                                 mydb.commit()
+                                formMVal.updateConditionsList()
+                                
                         else:
                                 flash("Insertion Failed", "failed")
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
@@ -129,6 +135,7 @@ def inputPage():
                         if(input.measurementAdd(formMeasure.measurement.data,formMeasure.domain.data,cursor)):
                                 flash("Insertion Successful","success")
                                 mydb.commit()
+                                formMVal.updateMeasurementList()
                         else:
                                 flash("Insertion Failed", "failed")
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)
@@ -139,6 +146,7 @@ def inputPage():
                         if(input.sequenceAdd(formSeq.sequence.data,formSeq.description.data,cursor,formSeq.filename.data)):
                                 flash("Insertion Successful","success")
                                 mydb.commit()
+                                formMVal.updateSequenceList()
                         else:
                                 flash("Insertion Failed", "failed")
                         return render_template("input.html",formCond=formCond, formMeasure=formMeasure, formSeq = formSeq, formMVal=formMVal, formFile=formFile)

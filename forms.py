@@ -36,9 +36,16 @@ class ConditionForm(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
     value = value = StringField('', [validators.Length(min=1,max=50), validateName])
 
+    def updateConditionChoices(self, choiceTuples):
+        self.condition.choices = choiceTuples
+
 class MeasurementForm(Form):
     measure = SelectField("Measurement", default="Select Measurement", choices=queries.getAllMeasurementNames(queries.cursor))
     measureValue = StringField('', [validators.Length(min=1,max=50), validateName])
+
+    def updateMeasureChoices(self, choiceTuples):
+        self.measure.choices = choiceTuples
+
 
 class ConditionFormNoVal(Form):
     condition = SelectField("Measurement", default="Select Measurement", choices=queries.getAllConditionNames(queries.cursor))
@@ -48,6 +55,9 @@ class InsertMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
     condList = FieldList(FormField(ConditionForm),min_entries=1)
     measureList = FieldList(FormField(MeasurementForm),min_entries=1)
+
+    def updateSequenceList(self):
+        self.sequence.choices = queries.getAllSequenceNames(queries.cursor)
 
     def addMeasure(self):
         self.measureList.append_entry()
@@ -60,6 +70,17 @@ class InsertMeasurementForm(Form):
             #conditionList.append({"condition":rawCond.})
         return measureList
     #allow for multi-var conditions
+
+    def updateMeasurementList(self):
+        measureTuples = queries.getAllMeasurementNames(queries.cursor)
+        for measurement in self.measureList:
+            measurement.updateMeasureChoices(measureTuples)
+
+    def updateConditionsList(self):
+        condTuples = queries.getAllConditionNames(queries.cursor)
+        for condition in self.condList:
+            condition.updateConditionChoices(condTuples)
+
     def addCondition(self):
         self.condList.append_entry()
 
@@ -100,7 +121,7 @@ class CSVFileUpload(Form):
 
 class QueryMeasurementForm(Form):
     sequence = SelectField(label="Select Sequence",choices=queries.getAllSequenceNames(queries.cursor))
-    condList = FieldList(FormField(ConditionForm))
+    condList = FieldList(FormField(ConditionForm),min_entries=1)
 
     def addCondition(self):
         self.condList.append_entry()
@@ -113,14 +134,26 @@ class QueryMeasurementForm(Form):
         return conditionList
 
 
+    def updateConditionsList(self):
+        condTuples = queries.getAllConditionNames(queries.cursor)
+        for condition in self.condList:
+            condition.updateConditionChoices(condTuples)
+
+    def updateSequenceList(self):
+        self.sequence.choices = queries.getAllSequenceNames(queries.cursor)
+
+
+    
+
+
 class DualQueryMeasurementForm(Form):
     # retrieval of all sequence values
     choices = queries.getAllSequenceNames(queries.cursor)
 
     seq1 = SelectField(label="Select Sequence1",choices=choices)
     seq2 = SelectField(label="Select Sequence2",choices=choices)
-    cond1 = FieldList(FormField(ConditionForm))
-    cond2 = FieldList(FormField(ConditionForm))
+    cond1 = FieldList(FormField(ConditionForm),min_entries=1)
+    cond2 = FieldList(FormField(ConditionForm),min_entries=1)
 
     def addCondition(self, index):
         if(index == 1):
@@ -147,5 +180,18 @@ class DualQueryMeasurementForm(Form):
             return self.seq1.data
         else:
             return self.seq2.data
+        
+
+    def updateConditionsList(self):
+        condTuples = queries.getAllConditionNames(queries.cursor)
+        for condition in self.cond1:
+            condition.updateConditionChoices(condTuples)
+        for condition in self.cond2:            
+            condition.updateConditionChoices(condTuples)
+
+    def updateSequenceList(self):
+        self.seq1.choices = queries.getAllSequenceNames(queries.cursor)
+        self.seq2.choices = queries.getAllSequenceNames(queries.cursor)
+            
 
 
