@@ -72,12 +72,16 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                    (sequence, count, sequence, count, sequence, count, sequence, count))
 
     ret = cursor.fetchall()
+    print(ret)
     checks = []
     prevCheck = False
 
     for iD in ret:
         for condition in experiment.conditions:
             if not prevCheck:
+                print(iD[0])
+                print(condition)
+                print(experiment.conditions[condition])
                 cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
                                     Experiment_ID = %s AND Condition_Value = %s) UNION 
                                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
@@ -90,7 +94,9 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                                 condition, iD[0], experiment.conditions[condition],
                                 condition, iD[0], experiment.conditions[condition],
                                 condition, iD[0], experiment.conditions[condition]))
+                print(cursor.statement)
                 iDs = cursor.fetchall()
+                
 
                 for i in iDs:
                     checks.append(i[0])
@@ -127,9 +133,9 @@ def experimentAdd(sequence, conditions, measurements, cursor):
                     UNION 
                     (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean)
                     UNION 
-                    (SELECT DISTINCT Experiment_ID FROM Experiment_String)) as ID_Count""")
+                    (SELECT DISTINCT Experiment_ID FROM Experiment_String)) as id_count """)
 
-    iD = cursor.fetchone() + 1
+    iD = cursor.fetchone()[0] + 1
 
     prevInsert = False
     for condition in experiment.conditions:
