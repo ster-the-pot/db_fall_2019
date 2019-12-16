@@ -52,11 +52,12 @@ def sequenceAdd(name, description, cursor, file_name=None):
     return True
 
 
-def experimentAdd(sequence, conditions, measurement, value, cursor):
+def experimentAdd(sequence, conditions, measurements, value, cursor):
     experiment = ExperimentReturn()
     count = len(conditions)
     experiment.sequence = sequence
-    experiment.measurements[measurement] = value
+    for measurement in measurements:
+        experiment.measurements[measurement["measurement"]] = measurement["value"]
     for condition in conditions:
         experiment.conditions[condition["condition"]] = condition["value"]
 
@@ -164,18 +165,19 @@ def experimentAdd(sequence, conditions, measurement, value, cursor):
                 return False
     print(experiment.measurements, "MEASUREMENTS")
 
-    cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
-    domain = cursor.fetchone()
-    if domain is False:
-        return False
-    print(domain)
+    for measurement in experiment.measurements:
+        cursor.execute("SELECT Domain FROM Measurement_Domains WHERE Measurement_Name = %s", (measurement,))
+        domain = cursor.fetchone()
+        if not domain:
+            return False
+        print(domain)
 
-    try:
-        cursor.execute("""INSERT INTO Measurements_""" + domain[0] + """ Values (%s, %s, %s)""",
-                       (experiment.iD, measurement, value))
-    except (errors.Error, errors.Warning) as error:
-        print(error)
-        return False
+        try:
+            cursor.execute("""INSERT INTO Measurements_""" + domain[0] + """ Values (%s, %s, %s)""",
+                           (experiment.iD, measurement, experiment.measurements[measurement]))
+        except (errors.Error, errors.Warning) as error:
+            print(error)
+            return False
     return True
 
 
@@ -196,12 +198,11 @@ def experimentInfo(sequence, conditions, cursor):
                    WHERE Condition_Name = %s 
                    AND Condition_Value = %s 
                    AND Sequence = %s
-                   AND Condition_Count = %s
-                   ORDER BY Experiment_ID DESC""", (condition, experiment.conditions[condition], sequence, count))
+                   ORDER BY Experiment_ID DESC""", (condition, experiment.conditions[condition], sequence))
 
         expIDs = cursor.fetchall()
 
-        if expIDs is False:
+        if not expIDs:
             return
         for iD in expIDs:
             print(iD[0])
