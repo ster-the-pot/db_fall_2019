@@ -61,6 +61,7 @@ class InsertMeasurementForm(Form):
 
     def addMeasure(self):
         self.measureList.append_entry()
+        self.updateMeasurementList()
 
     # allow for multivariable measurements
     def getMeasureList(self):
@@ -83,6 +84,7 @@ class InsertMeasurementForm(Form):
 
     def addCondition(self):
         self.condList.append_entry()
+        self.updateConditionsList()
 
     def getConditions(self):
         conditionList = []
