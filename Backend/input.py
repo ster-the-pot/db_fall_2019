@@ -120,7 +120,7 @@ def experimentAdd(sequence, conditions, measurements, cursor):
     if checks:
         return False
 
-    cursor.execute("""SELECT COUNT (DISTINCT Experiment_ID) FROM (
+    cursor.execute("""SELECT COUNT(*) FROM (
                     (SELECT DISTINCT Experiment_ID FROM Experiment_Int)
                     UNION 
                     (SELECT DISTINCT Experiment_ID FROM Experiment_Float)
