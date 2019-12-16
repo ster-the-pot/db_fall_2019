@@ -328,7 +328,7 @@ def side_by_side(sequence1, conditions1, sequence2, conditions2, cursor):
     checks = []
     prevCheck = False
     for iD in ret:
-        for condition in conditions2:
+        for condition in experiment2.conditions:
             if not prevCheck:
                 cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
                                 Experiment_ID = %s AND Condition_Value = %s) UNION 
