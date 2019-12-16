@@ -101,21 +101,21 @@ def experimentAdd(sequence, conditions, measurements, cursor):
             else:
                 for i in checks:
                     print(checks)
-                    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int Where Condition_Name = %s AND
-                                        Experiment_ID = %s AND Condition_Value = %s) UNION 
-                                        (SELECT DISTINCT Experiment_ID FROM Experiment_Float Where Condition_Name = %s
-                                        AND Experiment_ID = %s AND Condition_Value = %s) UNION 
-                                        (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean Where Condition_Name = %s
-                                        AND Experiment_ID = %s AND Condition_Value = %s) UNION 
-                                        (SELECT DISTINCT Experiment_ID FROM Experiment_String Where Sequence = %s
-                                        AND Experiment_ID = %s AND Condition_Value = %s)""",
-                                   (condition, i, experiment.conditions[condition],
-                                    condition, i, experiment.conditions[condition],
-                                    condition, i, experiment.conditions[condition],
-                                    condition, i, experiment.conditions[condition]))
+                    cursor.execute("""(SELECT DISTINCT Experiment_ID FROM Experiment_Int WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Float WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_Boolean WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s) UNION 
+                                    (SELECT DISTINCT Experiment_ID FROM Experiment_String WHERE Experiment_ID = %s
+                                    AND Condition_Name = %s AND Condition_Value = %s)""",
+                                   (i, condition, experiment.conditions[condition],
+                                    i, condition, experiment.conditions[condition],
+                                    i, condition, experiment.conditions[condition],
+                                    i, condition, experiment.conditions[condition]))
 
                     iDs = cursor.fetchall()
-
+                    print(iDs)
                     if not iDs:
                         checks.remove(i)
 
