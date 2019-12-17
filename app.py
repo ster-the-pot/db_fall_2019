@@ -220,4 +220,4 @@ def aboutPage():
         return render_template("about.html")
 
 if __name__ == "__main__":
-    app.run(host="172.31.41.22",port=80)
+    app.run()
